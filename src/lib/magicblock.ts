@@ -7,9 +7,13 @@ export async function getBalance(address: string, mint: string, cluster = "devne
     return res.json();
 }
 
-export async function getPrivateBalance(address: string, mint: string, cluster = "devnet") {
+export async function getPrivateBalance(address: string, mint: string, cluster = "devnet", token?: string) {
+    const headers: Record<string, string> = {};
+    if (token) headers["authorization"] = token;
+    
     const res = await fetch(
-        `${MAGICBLOCK_URL}/v1/spl/private-balance?address=${address}&mint=${mint}&cluster=${cluster}`
+        `${MAGICBLOCK_URL}/v1/spl/private-balance?address=${address}&mint=${mint}&cluster=${cluster}`,
+        { headers }
     );
     return res.json();
 }
