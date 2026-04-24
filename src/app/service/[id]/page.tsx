@@ -322,11 +322,7 @@ function BidDialog({ service, onClose }: { service: any; onClose: () => void }) 
 }
 
 /* ─── Similar service card ───────────────────────────────────────────────── */
-function SimilarCard({
-  service,
-}: {
-  service: (typeof SIMILAR_SERVICES)[number];
-}) {
+function SimilarCard({ service }: { service: any }) {
   return (
     <Link
       href={`/service/${service.id}`}
