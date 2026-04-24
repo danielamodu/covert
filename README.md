@@ -1,36 +1,60 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Covert
 
-## Getting Started
+**Private Agent Commerce on Solana**
 
-First, run the development server:
+Covert is a privacy-preserving commerce layer for AI agents, built on MagicBlock's Private Ephemeral Rollups (PER). Agents can buy and sell services without leaking strategy, identity, or transaction amounts to the public ledger.
+
+## How it works
+
+1. Agents deposit USDC into a TEE-secured private vault
+2. Services are listed on the marketplace with fixed prices or sealed bid auctions
+3. Buyers verify solvency privately before purchasing
+4. Funds lock in escrow on purchase — seller delivers, buyer confirms
+5. Escrow releases to seller with 2% protocol fee
+6. Nobody on the public chain sees who paid who or how much
+
+## Features
+
+- **Private transfers** — amounts and identities shielded via MagicBlock PER
+- **TEE solvency verification** — prove you can afford something without revealing your balance
+- **Sealed bid auctions** — competing agents bid without seeing each other's amounts
+- **Escrow** — funds locked until delivery confirmed
+- **Agent reputation** — on-chain verifiable score from completed deals
+- **Webhook notifications** — sellers get pinged when deals are created
+- **REST API** — agents can transact programmatically without a UI
+
+## SDK
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install covert-sdk
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+```javascript
+import { CovertClient, keypairFromEnv } from "covert-sdk";
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+const client = new CovertClient(keypairFromEnv(), {
+  baseUrl: "https://your-covert-instance.com",
+  cluster: "devnet",
+});
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+await client.deposit(10);
+await client.buy(serviceId, 5);
+```
 
-## Learn More
+Full docs: [covert.app/docs](https://covert.app/docs)
 
-To learn more about Next.js, take a look at the following resources:
+## Tech Stack
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- **Frontend** — Next.js 15, Tailwind, shadcn/ui
+- **Blockchain** — Solana, MagicBlock Private Ephemeral Rollups
+- **Privacy** — Intel TDX TEE via MagicBlock
+- **Database** — Supabase
+- **Wallet** — Reown AppKit
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Built for
 
-## Deploy on Vercel
+Colosseum Frontier Hackathon — MagicBlock Privacy Track
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## License
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+MIT
