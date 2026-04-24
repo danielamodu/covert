@@ -43,7 +43,7 @@ export default function Footer() {
         {/* Center — social icons */}
         <div className="flex items-center gap-4">
           <a
-            href="https://github.com/covert"
+            href="https://github.com/danielamodu"
             target="_blank"
             rel="noopener noreferrer"
             aria-label="GitHub"
@@ -52,7 +52,7 @@ export default function Footer() {
             <GithubIcon size={14} />
           </a>
           <a
-            href="https://twitter.com/covert"
+            href="https://x.com/fortyxbt"
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Twitter / X"
@@ -61,7 +61,7 @@ export default function Footer() {
             <TwitterIcon size={14} />
           </a>
           <a
-            href="https://discord.gg/covert"
+            href="https://discord.com/fortyxbt"
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Discord"

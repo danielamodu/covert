@@ -18,7 +18,7 @@ function truncate(addr: string) {
 }
 
 /* ─── Buy dialog ─────────────────────────────────────────────────────────── */
-function BuyDialog({ serviceName, sellerAddress, serviceId, serviceWebhookUrl, onClose }: { serviceName: string; sellerAddress: string; serviceId: string; serviceWebhookUrl: string | null; onClose: () => void }) {
+function BuyDialog({ serviceName, sellerAddress, serviceId, serviceWebhookUrl, onClose, onPurchaseSuccess }: { serviceName: string; sellerAddress: string; serviceId: string; serviceWebhookUrl: string | null; onClose: () => void; onPurchaseSuccess?: () => void }) {
   const { address } = useAppKitAccount();
   const { walletProvider } = useAppKitProvider<any>("solana");
   const { connection } = useAppKitConnection();
@@ -114,6 +114,7 @@ function BuyDialog({ serviceName, sellerAddress, serviceId, serviceWebhookUrl, o
 
       setStatus("success");
       setMessage("Funds locked in escrow — seller has been notified");
+      if (onPurchaseSuccess) onPurchaseSuccess();
     } catch (err: any) {
       console.error("Purchase error:", err);
       setStatus("error");
@@ -417,6 +418,19 @@ export default function ServicePage({
   const [solventVerified, setSolventVerified] = useState(false);
   const [verifying, setVerifying] = useState(false);
   const [verifyError, setVerifyError] = useState("");
+  const [purchased, setPurchased] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const isPurchased = localStorage.getItem(`purchased_${id}`);
+      if (isPurchased) setPurchased(true);
+    }
+  }, [id]);
+
+  const handlePurchaseSuccess = () => {
+    setPurchased(true);
+    localStorage.setItem(`purchased_${id}`, "true");
+  };
 
   const handleVerify = async () => {
     if (!address || !walletProvider) {
@@ -505,7 +519,19 @@ export default function ServicePage({
       .neq("id", service.id)
       .limit(3)
       .then(({ data }) => {
-        if (data) setSimilarServices(data);
+        if (data && data.length > 0) {
+          setSimilarServices(data);
+        } else {
+          // Fallback: fetch from other categories
+          supabase
+            .from("services")
+            .select("*")
+            .neq("category", service.category)
+            .limit(3)
+            .then(({ data: fallbackData }) => {
+              if (fallbackData) setSimilarServices(fallbackData);
+            });
+        }
       });
   }, [service]);
 
@@ -669,41 +695,55 @@ export default function ServicePage({
 
                     <div className="h-px bg-black/10" />
 
-                    {/* Solvency verification */}
-                    {!solventVerified ? (
-                      <div className="flex flex-col gap-2">
-                        <button
-                          type="button"
-                          onClick={handleVerify}
-                          disabled={verifying || !address}
-                          className="w-full border border-black/30 py-2.5 text-[11px] tracking-[0.15em] uppercase text-black hover:border-black transition-colors disabled:opacity-40"
-                        >
-                          {verifying ? "Verifying..." : "Verify Funds"}
-                        </button>
-                        <div className="flex items-center justify-center gap-1.5">
-                          <ShieldCheck size={10} strokeWidth={1.75} className="text-neutral-400" />
-                          <span className="text-[10px] text-neutral-400">TEE-verified solvency check</span>
+                    {/* Solvency verification / Purchase state */}
+                    {purchased ? (
+                      <div className="flex flex-col gap-3 bg-neutral-50 border border-black/10 p-6">
+                        <div className="flex items-center gap-2 text-green-600">
+                          <CheckCircle2 size={18} strokeWidth={2.5} />
+                          <span className="text-xs font-bold tracking-widest uppercase">Service Purchased — Awaiting Delivery</span>
                         </div>
-                        {verifyError && (
-                          <p className="text-[10px] tracking-widest uppercase text-red-500 text-center">{verifyError}</p>
-                        )}
+                        <p className="text-[10px] tracking-widest uppercase text-neutral-500">
+                          Check your dashboard for deal status
+                        </p>
                       </div>
                     ) : (
-                      <div className="flex items-center gap-2 border border-black/10 bg-neutral-50 px-3 py-2">
-                        <CheckCircle2 size={13} strokeWidth={2} className="text-black shrink-0" />
-                        <span className="text-[10px] tracking-widest uppercase text-black">Funds verified — ready to purchase</span>
-                      </div>
-                    )}
+                      <>
+                        {!solventVerified ? (
+                          <div className="flex flex-col gap-2">
+                            <button
+                              type="button"
+                              onClick={handleVerify}
+                              disabled={verifying || !address}
+                              className="w-full border border-black/30 py-2.5 text-[11px] tracking-[0.15em] uppercase text-black hover:border-black transition-colors disabled:opacity-40"
+                            >
+                              {verifying ? "Verifying..." : "Verify Funds"}
+                            </button>
+                            <div className="flex items-center justify-center gap-1.5">
+                              <ShieldCheck size={10} strokeWidth={1.75} className="text-neutral-400" />
+                              <span className="text-[10px] text-neutral-400">TEE-verified solvency check</span>
+                            </div>
+                            {verifyError && (
+                              <p className="text-[10px] tracking-widest uppercase text-red-500 text-center">{verifyError}</p>
+                            )}
+                          </div>
+                        ) : (
+                          <div className="flex items-center gap-2 border border-black/10 bg-neutral-50 px-3 py-2">
+                            <CheckCircle2 size={13} strokeWidth={2} className="text-black shrink-0" />
+                            <span className="text-[10px] tracking-widest uppercase text-black">Funds verified — ready to purchase</span>
+                          </div>
+                        )}
 
-                    <button
-                      type="button"
-                      id="buy-privately-btn"
-                      onClick={() => setBuyOpen(true)}
-                      disabled={!solventVerified}
-                      className="w-full border border-black bg-black py-3.5 text-[11px] tracking-[0.18em] uppercase text-white hover:bg-white hover:text-black transition-colors disabled:opacity-40 disabled:hover:bg-black disabled:hover:text-white"
-                    >
-                      Buy Privately
-                    </button>
+                        <button
+                          type="button"
+                          id="buy-privately-btn"
+                          onClick={() => setBuyOpen(true)}
+                          disabled={!solventVerified}
+                          className="w-full border border-black bg-black py-3.5 text-[11px] tracking-[0.18em] uppercase text-white hover:bg-white hover:text-black transition-colors disabled:opacity-40 disabled:hover:bg-black disabled:hover:text-white"
+                        >
+                          Buy Privately
+                        </button>
+                      </>
+                    )}
                   </>
                 )}
 
@@ -724,13 +764,19 @@ export default function ServicePage({
               </h2>
             </div>
             {similarServices.length > 0 ? (
-              <div className="grid gap-px bg-black/10 sm:grid-cols-2 lg:grid-cols-3">
+              <div className={`grid gap-px bg-black/10 ${
+                similarServices.length === 1 ? "grid-cols-1 max-w-sm" :
+                similarServices.length === 2 ? "grid-cols-1 sm:grid-cols-2" :
+                "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
+              }`}>
                 {similarServices.map((s) => (
                   <SimilarCard key={s.id} service={s} />
                 ))}
               </div>
             ) : (
-              <p className="text-sm text-neutral-400">No similar services yet.</p>
+              <div className="flex justify-center py-12">
+                <p className="text-sm text-neutral-400">No similar services available</p>
+              </div>
             )}
           </section>
         </div>
@@ -746,6 +792,7 @@ export default function ServicePage({
           serviceId={service.id}
           serviceWebhookUrl={service.webhook_url || null}
           onClose={() => setBuyOpen(false)}
+          onPurchaseSuccess={handlePurchaseSuccess}
         />
       )}
       {bidOpen && (
