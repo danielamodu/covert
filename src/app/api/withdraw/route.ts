@@ -1,7 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { buildWithdraw } from "@/lib/magicblock";
+import { rateLimit } from "@/lib/rateLimit";
 
 export async function POST(req: NextRequest) {
+    const ip = req.headers.get("x-forwarded-for") ?? "unknown";
+    if (!rateLimit(ip, 10, 60000)) {
+        return NextResponse.json({ error: "rate limit exceeded" }, { status: 429 });
+    }
+
     const body = await req.json();
     const { owner, mint, amount, cluster } = body;
 

@@ -10,6 +10,7 @@ import { useAppKitConnection } from "@reown/appkit-adapter-solana/react";
 import { PublicKey, Transaction } from "@solana/web3.js";
 import { getAuthToken } from "@magicblock-labs/ephemeral-rollups-sdk";
 import { supabase } from "@/lib/supabase";
+import bs58 from "bs58";
 
 
 /* ─── Helpers ────────────────────────────────────────────────────────────── */
@@ -35,6 +36,12 @@ function BuyDialog({ serviceName, sellerAddress, serviceId, serviceWebhookUrl, o
     try {
       const escrowWallet = process.env.NEXT_PUBLIC_ESCROW_WALLET!;
 
+      // Sign a message to prove wallet ownership
+      const buyMessage = `covert:buy:${serviceId}:${Date.now()}`;
+      const messageBytes = new TextEncoder().encode(buyMessage);
+      const signatureBytes = await walletProvider.signMessage(messageBytes);
+      const signature = bs58.encode(signatureBytes);
+
       // Lock funds into escrow via private transfer
       const res = await fetch("/api/transfer", {
         method: "POST",
@@ -49,6 +56,8 @@ function BuyDialog({ serviceName, sellerAddress, serviceId, serviceWebhookUrl, o
           toBalance: "ephemeral",
           cluster: "devnet",
           memo: `Escrow lock: ${serviceName}`,
+          signature,
+          message: buyMessage,
         }),
       });
 
