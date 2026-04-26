@@ -403,6 +403,7 @@ function StatusPill({ status }: { status: string }) {
     "Awaiting Delivery": "border-black/20 text-neutral-500",
     Confirmed: "border-black/15 text-neutral-500",
     "disputed": "border-red-300 text-red-500",
+    "delivered": "border-blue-300 text-blue-500",
   };
   return (
     <span
@@ -416,7 +417,7 @@ function StatusPill({ status }: { status: string }) {
 }
 
 /* ─── Active deals table ─────────────────────────────────────────────────── */
-function ActiveDeals({ deals, address, handleComplete, handleMarkReceived, handleDispute, setDeals }: { deals: any[]; address: string; handleComplete: (deal: any) => Promise<void>; handleMarkReceived: (deal: any) => Promise<void>; handleDispute: (id: string) => Promise<void>; setDeals: React.Dispatch<React.SetStateAction<any[]>> }) {
+function ActiveDeals({ deals, address, handleComplete, handleDelivered, handleDispute, setDeals }: { deals: any[]; address: string; handleComplete: (deal: any) => Promise<void>; handleDelivered: (dealId: string) => Promise<void>; handleDispute: (id: string) => Promise<void>; setDeals: React.Dispatch<React.SetStateAction<any[]>> }) {
   return (
     <section className="mt-12">
       <h2 className="text-xs tracking-[0.22em] uppercase text-neutral-600 mb-5">
@@ -437,6 +438,8 @@ function ActiveDeals({ deals, address, handleComplete, handleMarkReceived, handl
 
         {deals.map((deal, i) => {
           const counterparty = deal.buyer_address === address ? deal.seller_address : deal.buyer_address;
+          const isBuyer = deal.buyer_address === address;
+          const isSeller = deal.seller_address === address;
           return (
             <div
               key={deal.id}
@@ -457,19 +460,14 @@ function ActiveDeals({ deals, address, handleComplete, handleMarkReceived, handl
                 <span className="self-start inline-block border border-red-300 px-3 py-1 text-[10px] tracking-widest uppercase text-red-500 w-fit">
                   DISPUTED
                 </span>
-              ) : deal.seller_address === address ? (
-                <button
-                  type="button"
-                  onClick={() => handleComplete(deal)}
-                  className="self-start border border-black bg-black px-3 py-1 text-[10px] tracking-widest uppercase text-white hover:bg-white hover:text-black transition-colors w-fit"
-                >
-                  Mark Complete
-                </button>
-              ) : (
+              ) : deal.status === "delivered" && isBuyer ? (
                 <div className="flex gap-2 self-start">
+                  <span className="self-start inline-block border border-blue-300 px-3 py-1 text-[10px] tracking-widest uppercase text-blue-500 w-fit">
+                    AWAITING CONFIRMATION
+                  </span>
                   <button
                     type="button"
-                    onClick={() => handleMarkReceived(deal)}
+                    onClick={() => handleComplete(deal)}
                     className="border border-black/30 px-3 py-1 text-[10px] tracking-widest uppercase text-neutral-600 hover:border-black hover:text-black transition-colors w-fit"
                   >
                     Mark Received
@@ -482,7 +480,33 @@ function ActiveDeals({ deals, address, handleComplete, handleMarkReceived, handl
                     Dispute
                   </button>
                 </div>
-              )}
+              ) : isSeller ? (
+                <button
+                  type="button"
+                  onClick={() => handleDelivered(deal.id)}
+                  disabled={deal.status === "delivered"}
+                  className="self-start border border-black bg-black px-3 py-1 text-[10px] tracking-widest uppercase text-white hover:bg-white hover:text-black transition-colors w-fit disabled:opacity-50 disabled:hover:bg-black disabled:hover:text-white"
+                >
+                  Mark Complete
+                </button>
+              ) : isBuyer ? (
+                <div className="flex gap-2 self-start">
+                  <button
+                    type="button"
+                    onClick={() => handleComplete(deal)}
+                    className="border border-black/30 px-3 py-1 text-[10px] tracking-widest uppercase text-neutral-600 hover:border-black hover:text-black transition-colors w-fit"
+                  >
+                    Mark Received
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleDispute(deal.id)}
+                    className="border border-red-300 px-3 py-1 text-[10px] tracking-widest uppercase text-red-500 hover:bg-red-50 transition-colors w-fit"
+                  >
+                    Dispute
+                  </button>
+                </div>
+              ) : null}
             </div>
           );
         })}
@@ -805,51 +829,10 @@ export default function DashboardPage() {
       });
   }, [address]);
 
-  const handleComplete = async (deal: any) => {
-    try {
-      const escrowWallet = process.env.NEXT_PUBLIC_ESCROW_WALLET!;
-      // build private transfer from escrow wallet to seller
-      const res = await fetch("/api/transfer", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          from: escrowWallet,
-          to: deal.seller_address,
-          mint: "4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU",
-          amount: Math.round(deal.amount * 1e6),
-          visibility: "private",
-          fromBalance: "ephemeral",
-          toBalance: "ephemeral",
-          cluster: "devnet",
-          memo: `Escrow release: ${deal.id}`,
-        }),
-      });
-
-      const { transactionBase64 } = await res.json();
-      const buffer = Uint8Array.from(atob(transactionBase64), c => c.charCodeAt(0));
-      const transaction = Transaction.from(buffer);
-
-      if (!connection) throw new Error("No connection");
-      const { blockhash, lastValidBlockHeight } = await connection.getLatestBlockhash();
-      transaction.recentBlockhash = blockhash;
-      transaction.lastValidBlockHeight = lastValidBlockHeight;
-      transaction.feePayer = new PublicKey(address!);
-
-      const signed = await walletProvider.signTransaction(transaction);
-      const rawTx = signed.serialize();
-      const txid = await connection.sendRawTransaction(rawTx, { skipPreflight: true });
-      await connection.confirmTransaction(txid);
-
-      // update deal status
-      await supabase
-        .from("deals")
-        .update({ status: "completed", tx_signature: txid })
-        .eq("id", deal.id);
-
-      setDeals(prev => prev.filter(d => d.id !== deal.id));
-    } catch (err: any) {
-      console.error("escrow release failed:", err);
-    }
+  // Seller: mark deal as delivered (no escrow release)
+  const handleDelivered = async (dealId: string) => {
+    await supabase.from("deals").update({ status: "delivered" }).eq("id", dealId);
+    setDeals(prev => prev.map(d => d.id === dealId ? { ...d, status: "delivered" } : d));
   };
 
   const handleDispute = async (dealId: string) => {
@@ -857,7 +840,8 @@ export default function DashboardPage() {
     setDeals(prev => prev.map(d => d.id === dealId ? { ...d, status: "disputed" } : d));
   };
 
-  const handleMarkReceived = async (deal: any) => {
+  // Buyer: confirm receipt and release escrow to seller
+  const handleComplete = async (deal: any) => {
     try {
       const escrowWallet = process.env.NEXT_PUBLIC_ESCROW_WALLET!;
       const feeWallet = process.env.NEXT_PUBLIC_FEE_WALLET!;
@@ -947,6 +931,8 @@ export default function DashboardPage() {
     }
   };
 
+
+
   useEffect(() => {
     if (isConnected && address && connection) {
       fetch(`/api/balance?address=${address}&mint=4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU&cluster=devnet`)
@@ -961,7 +947,7 @@ export default function DashboardPage() {
         .from("deals")
         .select("*, services(name)")
         .or(`buyer_address.eq.${address},seller_address.eq.${address}`)
-        .in("status", ["pending", "in_progress", "awaiting_delivery", "escrowed"])
+        .in("status", ["pending", "in_progress", "awaiting_delivery", "escrowed", "delivered", "disputed"])
         .order("created_at", { ascending: false })
         .then(({ data }) => { if (data) setDeals(data); });
 
@@ -1130,7 +1116,7 @@ export default function DashboardPage() {
           )}
 
           {/* ── Active deals ───────────────────────────────────────────── */}
-          <ActiveDeals deals={deals} address={address as string} handleComplete={handleComplete} handleMarkReceived={handleMarkReceived} handleDispute={handleDispute} setDeals={setDeals} />
+          <ActiveDeals deals={deals} address={address as string} handleComplete={handleComplete} handleDelivered={handleDelivered} handleDispute={handleDispute} setDeals={setDeals} />
 
           {/* ── Tx history ─────────────────────────────────────────────── */}
           <TxHistory transactions={transactions} />
