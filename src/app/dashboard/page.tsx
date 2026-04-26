@@ -292,9 +292,20 @@ function PublicBalanceCard({ usdcBalance }: { usdcBalance: number }) {
   );
 }
 
-function PrivateBalanceCard({ address, walletProvider }: { address?: string; walletProvider: any }) {
+function PrivateBalanceCard({
+  address,
+  walletProvider,
+  balance,
+  setBalance,
+  onReveal,
+}: {
+  address?: string;
+  walletProvider: any;
+  balance: string | null;
+  setBalance: (b: string) => void;
+  onReveal: (token: string) => void;
+}) {
   const [revealed, setRevealed] = useState(false);
-  const [balance, setBalance] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -336,6 +347,7 @@ function PrivateBalanceCard({ address, walletProvider }: { address?: string; wal
       const rawBalance = data?.private?.balance ?? data?.balance ?? "0";
       const balanceString = (parseFloat(rawBalance) / 1e6).toFixed(4);
       setBalance(balanceString);
+      onReveal(authToken.token);
       setRevealed(true);
     } catch (err: any) {
       console.error(err);
@@ -795,6 +807,9 @@ export default function DashboardPage() {
   const { walletProvider } = useAppKitProvider<any>("solana");
   const [usdcBalance, setUsdcBalance] = useState(0);
   const [refreshing, setRefreshing] = useState(false);
+  const [authToken, setAuthToken] = useState<string | null>(null);
+  const [privateRevealed, setPrivateRevealed] = useState(false);
+  const [privateBalance, setPrivateBalance] = useState<string | null>(null);
   const [deals, setDeals] = useState<any[]>([]);
   const [transactions, setTransactions] = useState<any[]>([]);
   const [wonBids, setWonBids] = useState<any[]>([]);
@@ -941,6 +956,12 @@ export default function DashboardPage() {
     const res = await fetch(`/api/balance?address=${address}&mint=4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU&cluster=devnet`);
     const data = await res.json();
     setUsdcBalance(parseFloat(data.base?.balance ?? "0") / 1e6);
+    if (authToken) {
+      const privateRes = await fetch(`/api/balance?address=${address}&mint=4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU&cluster=devnet&token=${authToken}`);
+      const privateData = await privateRes.json();
+      const raw = privateData?.private?.balance ?? "0";
+      setPrivateBalance((parseFloat(raw) / 1e6).toFixed(4));
+    }
     setRefreshing(false);
   };
 
@@ -1072,7 +1093,16 @@ export default function DashboardPage() {
           {/* ── Balance cards ──────────────────────────────────────────── */}
           <div className="grid grid-cols-1 gap-px bg-black/10 sm:grid-cols-2">
             <PublicBalanceCard usdcBalance={usdcBalance} />
-            <PrivateBalanceCard address={address} walletProvider={walletProvider} />
+            <PrivateBalanceCard
+              address={address}
+              walletProvider={walletProvider}
+              balance={privateBalance}
+              setBalance={setPrivateBalance}
+              onReveal={(token) => {
+                setAuthToken(token);
+                setPrivateRevealed(true);
+              }}
+            />
           </div>
 
           {/* ── Agent Analytics ────────────────────────────────────────── */}
