@@ -19,7 +19,7 @@ export default function Navbar() {
 
         {/* Wordmark */}
         <Link
-          href="/"
+          href="/marketplace"
           className="text-sm font-bold tracking-[0.2em] uppercase text-black select-none hover:opacity-70 transition-opacity"
         >
           COVERT
