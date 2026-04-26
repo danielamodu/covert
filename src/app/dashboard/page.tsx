@@ -16,6 +16,7 @@ import {
   X,
   ShieldCheck,
   ListPlus,
+  RefreshCw,
 } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -74,7 +75,7 @@ function Dialog({
 }
 
 /* ─── Deposit dialog ─────────────────────────────────────────────────────── */
-function DepositDialog({ address, onClose }: { address: string; onClose: () => void }) {
+function DepositDialog({ address, onClose, onSuccess }: { address: string; onClose: () => void; onSuccess?: () => void }) {
   const { walletProvider } = useAppKitProvider<any>("solana");
   const { connection } = useAppKitConnection();
   
@@ -132,6 +133,7 @@ function DepositDialog({ address, onClose }: { address: string; onClose: () => v
       
       setStatus("success");
       setMessage("Deposit successful!");
+      onSuccess?.();
     } catch (err: any) {
       console.error(err);
       setStatus("error");
@@ -175,7 +177,7 @@ function DepositDialog({ address, onClose }: { address: string; onClose: () => v
 }
 
 /* ─── Withdraw dialog ────────────────────────────────────────────────────── */
-function WithdrawDialog({ address, walletProvider, onClose }: { address: string; walletProvider: any; onClose: () => void }) {
+function WithdrawDialog({ address, walletProvider, onClose, onSuccess }: { address: string; walletProvider: any; onClose: () => void; onSuccess?: () => void }) {
   const { connection } = useAppKitConnection();
   const [amount, setAmount] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
@@ -230,6 +232,7 @@ function WithdrawDialog({ address, walletProvider, onClose }: { address: string;
 
       setStatus("success");
       setMessage("Withdrawal successful!");
+      onSuccess?.();
     } catch (err: any) {
       console.error(err);
       setStatus("error");
@@ -791,6 +794,7 @@ export default function DashboardPage() {
   const { connection } = useAppKitConnection();
   const { walletProvider } = useAppKitProvider<any>("solana");
   const [usdcBalance, setUsdcBalance] = useState(0);
+  const [refreshing, setRefreshing] = useState(false);
   const [deals, setDeals] = useState<any[]>([]);
   const [transactions, setTransactions] = useState<any[]>([]);
   const [wonBids, setWonBids] = useState<any[]>([]);
@@ -931,7 +935,14 @@ export default function DashboardPage() {
     }
   };
 
-
+  const refreshBalances = async () => {
+    if (!address) return;
+    setRefreshing(true);
+    const res = await fetch(`/api/balance?address=${address}&mint=4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU&cluster=devnet`);
+    const data = await res.json();
+    setUsdcBalance(parseFloat(data.base?.balance ?? "0") / 1e6);
+    setRefreshing(false);
+  };
 
   useEffect(() => {
     if (isConnected && address && connection) {
@@ -993,9 +1004,20 @@ export default function DashboardPage() {
           {/* ── Top bar: address + actions ──────────────────────────────── */}
           <div className="flex flex-wrap items-center justify-between gap-4 mb-10">
             <div className="flex flex-col gap-1">
-              <p className="text-[10px] tracking-[0.22em] uppercase text-neutral-500">
-                Agent Dashboard
-              </p>
+              <div className="flex items-center gap-2">
+                <p className="text-[10px] tracking-[0.22em] uppercase text-neutral-500">
+                  Agent Dashboard
+                </p>
+                <button
+                  type="button"
+                  onClick={refreshBalances}
+                  disabled={refreshing}
+                  aria-label="Refresh balances"
+                  className="border border-black/20 p-1.5 hover:border-black transition-colors disabled:opacity-50"
+                >
+                  <RefreshCw size={12} strokeWidth={2} className={refreshing ? "animate-spin" : ""} />
+                </button>
+              </div>
               <code className="text-sm font-semibold text-black">
                 {address ? truncate(address) : ""}
               </code>
@@ -1128,10 +1150,10 @@ export default function DashboardPage() {
 
       {/* ── Dialogs ──────────────────────────────────────────────────────── */}
       {dialog === "deposit" && address && (
-        <DepositDialog address={address} onClose={() => setDialog(null)} />
+        <DepositDialog address={address} onClose={() => setDialog(null)} onSuccess={refreshBalances} />
       )}
       {dialog === "withdraw" && address && (
-        <WithdrawDialog address={address} walletProvider={walletProvider} onClose={() => setDialog(null)} />
+        <WithdrawDialog address={address} walletProvider={walletProvider} onClose={() => setDialog(null)} onSuccess={refreshBalances} />
       )}
       {dialog === "list" && address && (
         <ListServiceDialog address={address} onClose={() => setDialog(null)} />
