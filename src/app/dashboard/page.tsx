@@ -440,8 +440,8 @@ function ActiveDeals({ deals, address, handleComplete, handleDelivered, handleDi
       </h2>
       <div className="border border-black/10">
         {/* Header */}
-        <div className="grid grid-cols-4 border-b border-black/10 px-5 py-3 bg-neutral-50">
-          {["Counterparty", "Service", "Status", "Action"].map((h) => (
+        <div className="grid grid-cols-5 border-b border-black/10 px-5 py-3 bg-neutral-50">
+          {["Counterparty", "Service", "Role", "Status", "Action"].map((h) => (
             <span
               key={h}
               className="text-[10px] tracking-widest uppercase text-neutral-500"
@@ -458,7 +458,7 @@ function ActiveDeals({ deals, address, handleComplete, handleDelivered, handleDi
           return (
             <div
               key={deal.id}
-              className={`grid grid-cols-4 items-center px-5 py-4 transition-colors hover:bg-neutral-50 ${
+              className={`grid grid-cols-5 items-center px-5 py-4 transition-colors hover:bg-neutral-50 ${
                 i < deals.length - 1 ? "border-b border-black/10" : ""
               }`}
             >
@@ -470,58 +470,79 @@ function ActiveDeals({ deals, address, handleComplete, handleDelivered, handleDi
               <Link href={`/service/${deal.service_id}`} className="text-sm text-black hover:opacity-70 transition-opacity">
                 {deal.services?.name}
               </Link>
-              <StatusPill status={deal.status} />
-              {deal.status === "disputed" ? (
-                <span className="self-start inline-block border border-red-300 px-3 py-1 text-[10px] tracking-widest uppercase text-red-500 w-fit">
-                  DISPUTED
-                </span>
-              ) : deal.status === "delivered" && isBuyer ? (
-                <div className="flex gap-2 self-start">
-                  <span className="self-start inline-block border border-blue-300 px-3 py-1 text-[10px] tracking-widest uppercase text-blue-500 w-fit">
-                    AWAITING CONFIRMATION
+              {/* Role badge */}
+              <span>
+                {isBuyer ? (
+                  <span className="inline-block border border-black/30 px-2 py-0.5 text-[10px] tracking-widest uppercase text-neutral-700">
+                    BUYER
                   </span>
+                ) : isSeller ? (
+                  <span className="inline-block border border-black/30 px-2 py-0.5 text-[10px] tracking-widest uppercase text-neutral-700">
+                    SELLER
+                  </span>
+                ) : null}
+              </span>
+              <StatusPill status={deal.status} />
+              {/* Action column */}
+              <div className="flex flex-col gap-1 items-start">
+                {deal.status === "disputed" || deal.status === "completed" ? (
+                  <span
+                    className={`inline-block border px-3 py-1 text-[10px] tracking-widest uppercase w-fit ${
+                      deal.status === "disputed"
+                        ? "border-red-300 text-red-500"
+                        : "border-black/15 text-neutral-500"
+                    }`}
+                  >
+                    {deal.status === "disputed" ? "DISPUTED" : "COMPLETED"}
+                  </span>
+                ) : isBuyer && deal.status === "escrowed" ? (
+                  <>
+                    <button
+                      type="button"
+                      onClick={() => handleComplete(deal)}
+                      className="border border-black/30 px-3 py-1 text-[10px] tracking-widest uppercase text-neutral-600 hover:border-black hover:text-black transition-colors w-fit"
+                    >
+                      Mark Received
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleDispute(deal.id)}
+                      className="border border-red-300 px-3 py-1 text-[10px] tracking-widest uppercase text-red-500 hover:bg-red-50 transition-colors w-fit"
+                    >
+                      Dispute
+                    </button>
+                  </>
+                ) : isBuyer && deal.status === "delivered" ? (
+                  <>
+                    <button
+                      type="button"
+                      onClick={() => handleComplete(deal)}
+                      className="border border-black/30 px-3 py-1 text-[10px] tracking-widest uppercase text-neutral-600 hover:border-black hover:text-black transition-colors w-fit"
+                    >
+                      Confirm Receipt
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleDispute(deal.id)}
+                      className="border border-red-300 px-3 py-1 text-[10px] tracking-widest uppercase text-red-500 hover:bg-red-50 transition-colors w-fit"
+                    >
+                      Dispute
+                    </button>
+                  </>
+                ) : isSeller && deal.status === "escrowed" ? (
                   <button
                     type="button"
-                    onClick={() => handleComplete(deal)}
-                    className="border border-black/30 px-3 py-1 text-[10px] tracking-widest uppercase text-neutral-600 hover:border-black hover:text-black transition-colors w-fit"
+                    onClick={() => handleDelivered(deal.id)}
+                    className="border border-black bg-black px-3 py-1 text-[10px] tracking-widest uppercase text-white hover:bg-white hover:text-black transition-colors w-fit"
                   >
-                    Mark Received
+                    Mark Delivered
                   </button>
-                  <button
-                    type="button"
-                    onClick={() => handleDispute(deal.id)}
-                    className="border border-red-300 px-3 py-1 text-[10px] tracking-widest uppercase text-red-500 hover:bg-red-50 transition-colors w-fit"
-                  >
-                    Dispute
-                  </button>
-                </div>
-              ) : isSeller ? (
-                <button
-                  type="button"
-                  onClick={() => handleDelivered(deal.id)}
-                  disabled={deal.status === "delivered"}
-                  className="self-start border border-black bg-black px-3 py-1 text-[10px] tracking-widest uppercase text-white hover:bg-white hover:text-black transition-colors w-fit disabled:opacity-50 disabled:hover:bg-black disabled:hover:text-white"
-                >
-                  Mark Complete
-                </button>
-              ) : isBuyer ? (
-                <div className="flex gap-2 self-start">
-                  <button
-                    type="button"
-                    onClick={() => handleComplete(deal)}
-                    className="border border-black/30 px-3 py-1 text-[10px] tracking-widest uppercase text-neutral-600 hover:border-black hover:text-black transition-colors w-fit"
-                  >
-                    Mark Received
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => handleDispute(deal.id)}
-                    className="border border-red-300 px-3 py-1 text-[10px] tracking-widest uppercase text-red-500 hover:bg-red-50 transition-colors w-fit"
-                  >
-                    Dispute
-                  </button>
-                </div>
-              ) : null}
+                ) : isSeller && deal.status === "delivered" ? (
+                  <span className="text-[10px] tracking-widest uppercase text-neutral-400">
+                    Awaiting Buyer Confirmation
+                  </span>
+                ) : null}
+              </div>
             </div>
           );
         })}
