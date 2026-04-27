@@ -6,6 +6,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
+import { useAppKitAccount } from "@reown/appkit/react";
 
 function truncateAddress(addr: string) {
   return `${addr.slice(0, 4)}…${addr.slice(-4)}`;
@@ -222,16 +223,28 @@ export default function MarketplacePage() {
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
   const [sortBy, setSortBy] = useState<string>("newest");
   const [searchQuery, setSearchQuery] = useState<string>("");
+  const { address, isConnected } = useAppKitAccount();
 
   useEffect(() => {
     supabase
       .from("services")
       .select("*")
       .order("created_at", { ascending: false })
-      .then(({ data }) => {
-        if (data) setServices(data);
+      .then(async ({ data }) => {
+        if (!data) return;
+        if (isConnected && address) {
+          const { data: activeDeals } = await supabase
+            .from("deals")
+            .select("service_id")
+            .eq("buyer_address", address)
+            .in("status", ["escrowed", "delivered", "pending"]);
+          const activeDealServiceIds = new Set(activeDeals?.map((d) => d.service_id) ?? []);
+          setServices(data.filter((s) => !activeDealServiceIds.has(s.id)));
+        } else {
+          setServices(data);
+        }
       });
-  }, []);
+  }, [isConnected, address]);
 
   const filteredServices = services
     .filter(s => selectedCategory === "All" || s.category === selectedCategory)

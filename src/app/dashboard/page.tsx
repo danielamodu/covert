@@ -609,6 +609,11 @@ function TxHistory({ transactions }: { transactions: any[] }) {
           </div>
         )}
       </div>
+      <div className="mt-3 flex justify-end">
+        <Link href="/activity" className="text-[10px] tracking-widest uppercase text-neutral-500 hover:text-black transition-colors">
+          View All
+        </Link>
+      </div>
     </section>
   );
 }
@@ -1009,6 +1014,7 @@ export default function DashboardPage() {
         .select("*, services(name)")
         .eq("wallet_address", address)
         .order("created_at", { ascending: false })
+        .limit(6)
         .then(({ data }) => { if (data) setTransactions(data); });
 
       supabase
