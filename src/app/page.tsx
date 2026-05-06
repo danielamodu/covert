@@ -49,7 +49,7 @@ function LandingNavbar() {
         <button
           type="button"
           onClick={() => open()}
-          className="border border-white bg-black px-5 py-2 text-[11px] tracking-[0.18em] uppercase text-white transition-colors duration-150 hover:bg-white hover:text-black focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+          className="btn-press border border-white bg-black px-5 py-2 text-[11px] tracking-[0.18em] uppercase text-white transition-colors duration-150 hover:bg-white hover:text-black focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black"
         >
           {isConnected && address ? truncate(address) : "Connect Wallet"}
         </button>
@@ -72,7 +72,7 @@ function LandingFooter() {
             target="_blank"
             rel="noopener noreferrer"
             aria-label="GitHub"
-            className="text-neutral-500 transition-colors hover:text-white"
+            className="text-neutral-500 transition-[color] duration-[150ms] ease-[cubic-bezier(0.23,1,0.32,1)] hover:text-white"
           >
             <GithubIcon size={14} />
           </a>
@@ -81,7 +81,7 @@ function LandingFooter() {
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Twitter / X"
-            className="text-neutral-500 transition-colors hover:text-white"
+            className="text-neutral-500 transition-[color] duration-[150ms] ease-[cubic-bezier(0.23,1,0.32,1)] hover:text-white"
           >
             <TwitterIcon size={14} />
           </a>
@@ -90,7 +90,7 @@ function LandingFooter() {
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Discord"
-            className="text-neutral-500 transition-colors hover:text-white"
+            className="text-neutral-500 transition-[color] duration-[150ms] ease-[cubic-bezier(0.23,1,0.32,1)] hover:text-white"
           >
             <DiscordIcon size={14} />
           </a>
@@ -111,41 +111,41 @@ export default function LandingPage() {
       
       <main className="flex-1 flex flex-col pt-14">
         {/* Full viewport height hero */}
-        <section className="flex-1 flex flex-col justify-center items-center text-center px-6 min-h-[85vh]">
-          <p 
-            className="text-[10px] sm:text-xs tracking-[0.25em] uppercase text-neutral-400 mb-8 max-w-2xl leading-relaxed opacity-0 animate-fade-up" 
+        <section className="flex-1 flex flex-col justify-center items-center text-center px-6 min-h-[100dvh]">
+          <p
+            className="text-[10px] sm:text-xs tracking-[0.25em] uppercase text-neutral-400 mb-8 max-w-2xl leading-relaxed opacity-0 animate-fade-up"
             style={{ animationDelay: '0ms' }}
           >
             SOLANA · MAGICBLOCK PER · PRIVATE COMMERCE
           </p>
           
-          <h1 
-            className="max-w-4xl text-5xl sm:text-6xl md:text-8xl font-black leading-tight tracking-tighter mb-8 opacity-0 animate-fade-up" 
-            style={{ animationDelay: '100ms' }}
+          <h1
+            className="max-w-4xl text-5xl sm:text-6xl md:text-8xl font-black leading-tight tracking-tighter mb-8 opacity-0 animate-fade-up"
+            style={{ animationDelay: '80ms' }}
           >
             The Dark Market<br />for AI Agents
           </h1>
           
-          <p 
-            className="max-w-2xl text-base sm:text-xl leading-relaxed text-neutral-400 mb-12 opacity-0 animate-fade-up" 
-            style={{ animationDelay: '200ms' }}
+          <p
+            className="max-w-[58ch] text-base sm:text-lg leading-relaxed text-neutral-400 mb-12 opacity-0 animate-fade-up"
+            style={{ animationDelay: '160ms' }}
           >
             Autonomous agents buy, sell, and transact — without leaking strategy, identity, or price. Powered by MagicBlock&apos;s Private Ephemeral Rollups.
           </p>
           
-          <div 
-            className="flex flex-col sm:flex-row items-center gap-4 w-full justify-center sm:w-auto opacity-0 animate-fade-up" 
-            style={{ animationDelay: '300ms' }}
+          <div
+            className="flex flex-col sm:flex-row items-center gap-4 w-full justify-center sm:w-auto opacity-0 animate-fade-up"
+            style={{ animationDelay: '240ms' }}
           >
-            <Link 
+            <Link
               href="/marketplace"
-              className="w-full sm:w-auto bg-white text-black px-10 py-4 text-xs tracking-[0.2em] font-bold uppercase hover:bg-neutral-200 transition-colors text-center"
+              className="btn-press w-full sm:w-auto bg-white text-black px-10 py-4 text-xs tracking-[0.2em] font-bold uppercase transition-[background-color,color] duration-[150ms] ease-[cubic-bezier(0.23,1,0.32,1)] hover:bg-neutral-200 text-center"
             >
               Enter Marketplace
             </Link>
-            <Link 
+            <Link
               href="/docs"
-              className="w-full sm:w-auto bg-transparent text-white border border-white/30 px-10 py-4 text-xs tracking-[0.2em] uppercase hover:bg-white/10 transition-colors text-center"
+              className="btn-press w-full sm:w-auto bg-transparent text-white border border-white/30 px-10 py-4 text-xs tracking-[0.2em] uppercase transition-[background-color] duration-[150ms] ease-[cubic-bezier(0.23,1,0.32,1)] hover:bg-white/10 text-center"
             >
               View Docs
             </Link>
@@ -153,9 +153,9 @@ export default function LandingPage() {
         </section>
 
         {/* Stats Row */}
-        <div 
-          className="border-t border-white/10 opacity-0 animate-fade-up" 
-          style={{ animationDelay: '400ms' }}
+        <div
+          className="border-t border-white/10 opacity-0 animate-section-reveal"
+          style={{ animationDelay: '100ms' }}
         >
           <div className="mx-auto max-w-6xl w-full grid grid-cols-2 lg:grid-cols-4 divide-x divide-y lg:divide-y-0 divide-white/10">
             {[
@@ -173,10 +173,10 @@ export default function LandingPage() {
         </div>
 
         {/* How it works */}
-        <section 
-          id="how-it-works" 
-          className="py-32 px-6 border-t border-white/10 opacity-0 animate-fade-up" 
-          style={{ animationDelay: '500ms' }}
+        <section
+          id="how-it-works"
+          className="py-32 px-6 border-t border-white/10 opacity-0 animate-section-reveal"
+          style={{ animationDelay: '0ms' }}
         >
           <div className="mx-auto max-w-6xl">
             <h2 className="text-xs tracking-[0.2em] uppercase text-neutral-400 mb-16 text-center">
@@ -192,7 +192,7 @@ export default function LandingPage() {
                 <div key={i} className="flex flex-col border-l border-white/20 pl-6">
                   <span className="text-[10px] tracking-widest text-neutral-500 font-mono mb-4">{step.num}</span>
                   <h3 className="text-lg font-bold mb-3">{step.title}</h3>
-                  <p className="text-sm leading-relaxed text-neutral-400">{step.desc}</p>
+                  <p className="text-sm leading-relaxed text-neutral-400 max-w-[38ch]">{step.desc}</p>
                 </div>
               ))}
             </div>

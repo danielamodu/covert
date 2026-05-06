@@ -117,6 +117,19 @@
   --sidebar-ring: oklch(0.556 0 0);
 }
 
+:root {
+  /* Strong easing curves — Emil Kowalski / design-taste-frontend */
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+  --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
+  --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* Canonical durations */
+  --duration-snap: 150ms;   /* micro-interactions: hover, press */
+  --duration-enter: 0.75s;  /* entry / marketing reveals */
+  --duration-page: 0.4s;    /* route-level page-in */
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
@@ -129,18 +142,161 @@
   }
 }
 
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   ANIMATION SYSTEM
+   Brand register  → orchestrated sequences, stagger reveals (landing)
+   Product register → state-driven, 150-300ms, no choreography
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+/* ── 1. Hero / marketing entry
+   Long duration + spring ease = weighty, confident arrival
+   scale(0.97) start prevents elements appearing "out of thin air"        ── */
 @keyframes fadeUp {
-  from { opacity: 0; transform: translateY(24px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(22px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 .animate-fade-up {
-  animation: fadeUp 0.6s ease forwards;
+  animation-name: fadeUp;
+  animation-duration: var(--duration-enter);        /* 0.75s */
+  animation-timing-function: var(--ease-spring);    /* cubic-bezier(0.16,1,0.3,1) */
+  animation-fill-mode: both;                        /* both: respects delay AND holds end state */
 }
 
+/* ── 2. Below-fold section reveals (scroll-triggered)
+   Shorter: users are already looking, they don't need to wait 0.75s.
+   Smaller translateY: they've scrolled so vertical travel feels longer.  ── */
+@keyframes sectionReveal {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.99);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+.animate-section-reveal {
+  animation-name: sectionReveal;
+  animation-duration: 0.5s;
+  animation-timing-function: var(--ease-spring);
+  animation-fill-mode: both;
+}
+
+/* ── 3. Route / page transition
+   Product register: keep it fast. 0.3s feels instant; 0.4s felt slow.
+   Smaller translate (10px → 8px) + tighter scale (0.98 → 0.99)         ── */
 @keyframes pageIn {
-  from { opacity: 0; transform: translateY(12px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.99);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 .page-enter {
-  animation: pageIn 0.35s ease forwards;
+  animation-name: pageIn;
+  animation-duration: 0.3s;                         /* was 0.4s — snappier nav */
+  animation-timing-function: var(--ease-spring);
+  animation-fill-mode: both;
+}
+
+/* ── 4. Dialog / modal entrance
+   Scale from 0.96 + fade — reads as "materialising" not teleporting.
+   Used by the custom Dialog shell in dashboard (not the shadcn one).     ── */
+@keyframes dialogIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+@keyframes backdropIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+.animate-dialog-in {
+  animation-name: dialogIn;
+  animation-duration: 0.25s;
+  animation-timing-function: var(--ease-spring);
+  animation-fill-mode: both;
+}
+.animate-backdrop-in {
+  animation-name: backdropIn;
+  animation-duration: 0.2s;
+  animation-timing-function: ease-out;
+  animation-fill-mode: both;
+}
+
+/* ── 4b. Panel entrance (flex-centered dialogs)
+   Scale only — no translate offset (parent flex handles centering).      ── */
+@keyframes panelIn {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* ── 5. Stagger utilities
+   Apply to parent; children inherit --stagger-delay via nth-child offsets.
+   Pattern: add [--i:0] [--i:1] etc. on each child for precise control.  ── */
+.stagger-children > * {
+  animation-delay: calc(var(--i, 0) * 80ms);
+}
+/* Convenience: first 6 children auto-staggered at 80ms each */
+.stagger-children > *:nth-child(1) { --i: 0; }
+.stagger-children > *:nth-child(2) { --i: 1; }
+.stagger-children > *:nth-child(3) { --i: 2; }
+.stagger-children > *:nth-child(4) { --i: 3; }
+.stagger-children > *:nth-child(5) { --i: 4; }
+.stagger-children > *:nth-child(6) { --i: 5; }
+
+/* ── 6. Button press tactile feedback
+   scale(0.97): physical confirmation without feeling broken.
+   transition covers all interactive state changes.                       ── */
+.btn-press {
+  transition-property: transform, color, background-color, border-color;
+  transition-duration: var(--duration-snap);
+  transition-timing-function: var(--ease-out);
+}
+.btn-press:active {
+  transform: scale(0.97);
+}
+
+/* ── 7. Shared transition helper ── */
+.transition-ui {
+  transition-property: color, background-color, border-color, opacity;
+  transition-duration: var(--duration-snap);
+  transition-timing-function: var(--ease-out);
+}
+
+/* ── 8. Reduced motion
+   Single blanket override per WCAG 2.1 2.3.3.
+   Fade only — no transforms, no choreography.                            ── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .animate-pulse {
+    animation: none !important;
+  }
 }

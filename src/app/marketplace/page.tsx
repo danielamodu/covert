@@ -29,7 +29,7 @@ function Hero() {
       </h1>
 
       {/* Sub-headline */}
-      <p className="mt-6 max-w-lg text-base leading-7 text-neutral-600 sm:text-lg">
+      <p className="mt-6 max-w-[52ch] text-base leading-7 text-neutral-600 sm:text-lg">
         A permissionless marketplace where autonomous agents transact — sealed
         bids, hidden prices, zero data leakage.
       </p>
@@ -55,7 +55,7 @@ function ServiceCard({ service }: { service: any }) {
   const isAuction = service.type === "auction";
 
   return (
-    <div className="group relative flex flex-col gap-5 border border-black/10 bg-white p-6 transition-all duration-200 hover:border-black hover:shadow-[4px_4px_0_0_#000]">
+    <div className="group relative flex flex-col gap-5 border border-black/10 bg-white p-6 transition-[border-color,box-shadow] duration-[150ms] ease-[cubic-bezier(0.23,1,0.32,1)] hover:border-black hover:shadow-[4px_4px_0_0_#000]">
       {/* Top row: badge + price/bid info */}
       <div className="flex items-start justify-between">
         {isAuction ? (
@@ -106,7 +106,7 @@ function ServiceCard({ service }: { service: any }) {
           <span className="text-[10px] uppercase tracking-widest text-neutral-500">
             Seller
           </span>
-          <Link href={`/agent/${service.seller_address}`} className="hover:opacity-70 transition-opacity">
+          <Link href={`/agent/${service.seller_address}`} className="transition-opacity duration-[150ms] ease-[cubic-bezier(0.23,1,0.32,1)] hover:opacity-70">
             <code className="text-xs text-neutral-700">
               {truncateAddress(service.seller_address)}
             </code>
@@ -117,7 +117,7 @@ function ServiceCard({ service }: { service: any }) {
       {/* CTA */}
       <button
         type="button"
-        className="relative z-10 pointer-events-none mt-auto w-full border border-black bg-black py-2.5 text-[11px] tracking-[0.15em] uppercase text-white transition-all duration-150 group-hover:bg-white group-hover:text-black focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2"
+        className="relative z-10 pointer-events-none mt-auto w-full border border-black bg-black py-2.5 text-[11px] tracking-[0.15em] uppercase text-white transition-[background-color,color] duration-[150ms] ease-[cubic-bezier(0.23,1,0.32,1)] group-hover:bg-white group-hover:text-black focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2"
       >
         {isAuction ? "Place Bid" : "Buy Privately"}
       </button>
@@ -139,8 +139,9 @@ function ServicesGrid({ services }: { services: any[] }) {
       </div>
 
       {services.length === 0 ? (
-        <div className="text-center py-20 text-neutral-500 text-sm">
-          No services listed yet.
+        <div className="text-center py-20">
+          <p className="text-[10px] tracking-[0.22em] uppercase text-neutral-400">No services listed</p>
+          <p className="mt-2 text-xs text-neutral-400">Be the first to list a service.</p>
         </div>
       ) : (
         <div className="w-full">
@@ -177,12 +178,12 @@ function FilterBar({
     <div className="mx-auto w-full max-w-6xl px-6 mt-16 border-b border-black/10 pb-8">
       <div className="flex flex-col lg:flex-row gap-6 justify-between items-start lg:items-center">
         {/* Search */}
-        <input 
-          type="text" 
-          placeholder="Search services..." 
+        <input
+          type="text"
+          placeholder="Search services..."
           value={searchQuery}
           onChange={e => setSearchQuery(e.target.value)}
-          className="border border-black/20 bg-transparent px-4 py-2 text-sm w-full lg:w-64 placeholder:text-neutral-400 focus:outline-none focus:border-black"
+          className="border border-black/20 bg-transparent px-4 py-2 text-sm w-full lg:w-64 placeholder:text-neutral-400 focus:outline-none transition-[border-color] duration-[150ms] ease-[cubic-bezier(0.23,1,0.32,1)] focus:border-black"
         />
         
         {/* Categories */}
@@ -191,9 +192,9 @@ function FilterBar({
             <button
               key={c}
               onClick={() => setSelectedCategory(c)}
-              className={`px-3 py-1.5 text-[10px] tracking-widest uppercase transition-colors border ${
-                selectedCategory === c 
-                  ? "bg-black text-white border-black" 
+              className={`px-3 py-1.5 text-[10px] tracking-widest uppercase transition-[background-color,color,border-color] duration-[150ms] ease-[cubic-bezier(0.23,1,0.32,1)] border ${
+                selectedCategory === c
+                  ? "bg-black text-white border-black"
                   : "bg-transparent text-neutral-600 border-black/20 hover:border-black hover:text-black"
               }`}
             >
@@ -203,10 +204,10 @@ function FilterBar({
         </div>
 
         {/* Sort */}
-        <select 
-          value={sortBy} 
+        <select
+          value={sortBy}
           onChange={e => setSortBy(e.target.value)}
-          className="border border-black/20 bg-transparent px-4 py-2 text-sm text-black focus:outline-none focus:border-black cursor-pointer min-w-[160px]"
+          className="border border-black/20 bg-transparent px-4 py-2 text-sm text-black focus:outline-none transition-[border-color] duration-[150ms] ease-[cubic-bezier(0.23,1,0.32,1)] focus:border-black cursor-pointer min-w-[160px]"
         >
           <option value="newest">Newest</option>
           <option value="price_asc">Price: Low to High</option>

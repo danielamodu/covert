@@ -1,0 +1,135 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-05-06T21:41:00Z",
+  "title": "Design System: Covert",
+  "extensions": {
+    "colorMeta": {
+      "ink":              { "role": "primary",     "displayName": "Ink",             "canonical": "oklch(0.145 0 0)",          "tonalRamp": ["oklch(0.08 0 0)","oklch(0.145 0 0)","oklch(0.205 0 0)","oklch(0.269 0 0)","oklch(0.371 0 0)","oklch(0.439 0 0)","oklch(0.556 0 0)","oklch(0.708 0 0)"] },
+      "surface":          { "role": "neutral",     "displayName": "Surface",         "canonical": "oklch(1 0 0)",              "tonalRamp": ["oklch(0.85 0 0)","oklch(0.90 0 0)","oklch(0.93 0 0)","oklch(0.955 0 0)","oklch(0.97 0 0)","oklch(0.985 0 0)","oklch(0.993 0 0)","oklch(1 0 0)"] },
+      "border-default":   { "role": "neutral",     "displayName": "Border Default",  "canonical": "oklch(0.922 0 0)",          "tonalRamp": ["oklch(0.7 0 0)","oklch(0.75 0 0)","oklch(0.80 0 0)","oklch(0.85 0 0)","oklch(0.88 0 0)","oklch(0.905 0 0)","oklch(0.922 0 0)","oklch(0.94 0 0)"] },
+      "text-secondary":   { "role": "neutral",     "displayName": "Text Secondary",  "canonical": "oklch(0.556 0 0)",          "tonalRamp": ["oklch(0.3 0 0)","oklch(0.371 0 0)","oklch(0.439 0 0)","oklch(0.5 0 0)","oklch(0.556 0 0)","oklch(0.620 0 0)","oklch(0.680 0 0)","oklch(0.708 0 0)"] },
+      "destructive":      { "role": "functional",  "displayName": "Destructive",     "canonical": "oklch(0.577 0.245 27.325)", "tonalRamp": ["oklch(0.35 0.18 27)","oklch(0.42 0.20 27)","oklch(0.49 0.22 27)","oklch(0.55 0.24 27)","oklch(0.577 0.245 27)","oklch(0.64 0.22 27)","oklch(0.72 0.18 27)","oklch(0.82 0.12 27)"] },
+      "private-surface":  { "role": "primary",     "displayName": "Private Surface", "canonical": "oklch(0.145 0 0)",          "tonalRamp": ["oklch(0.08 0 0)","oklch(0.145 0 0)","oklch(0.205 0 0)","oklch(0.269 0 0)","oklch(0.371 0 0)","oklch(0.439 0 0)","oklch(0.556 0 0)","oklch(0.708 0 0)"] }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display",  "purpose": "Hero headline only. Appears once per page. font-weight 900, tight tracking." },
+      "headline": { "displayName": "Headline", "purpose": "Section-level h1 (marketplace). Never used mid-page." },
+      "title":    { "displayName": "Title",    "purpose": "Service card names, dialog titles." },
+      "body":     { "displayName": "Body",     "purpose": "Prose, descriptions. Max 65ch." },
+      "label":    { "displayName": "Label",    "purpose": "ALL system labels: table headers, nav, buttons, badges. Always ALL CAPS, tracking ≥0.18em." },
+      "mono":     { "displayName": "Mono",     "purpose": "Wallet addresses and tx signatures. Always truncated in UI." }
+    },
+    "shadows": [
+      { "name": "card-lift",   "value": "4px 4px 0 0 oklch(0.145 0 0)",  "purpose": "Service card hover only. Hard-edge, zero blur. Physical lift metaphor." },
+      { "name": "dialog-lift", "value": "8px 8px 0 0 oklch(0.145 0 0)", "purpose": "Modal dialog panels. Heavier than card-lift; signals focus trap." }
+    ],
+    "motion": [
+      { "name": "ease-entry",        "value": "cubic-bezier(0.16, 1, 0.3, 1)",  "duration": "0.75s",  "purpose": "Page and hero entry animations. Smooth, weighty arrival." },
+      { "name": "ease-page-in",      "value": "cubic-bezier(0.16, 1, 0.3, 1)",  "duration": "0.4s",   "purpose": "Route transition fade-in." },
+      { "name": "ease-interaction",  "value": "cubic-bezier(0.23, 1, 0.32, 1)", "duration": "150ms",  "purpose": "Button hover, color transitions, micro-interactions." },
+      { "name": "ease-out",          "value": "cubic-bezier(0.23, 1, 0.32, 1)", "duration": "150ms",  "purpose": "Active press scale(0.97) on .btn-press." }
+    ],
+    "breakpoints": [
+      { "name": "sm",  "value": "640px" },
+      { "name": "lg",  "value": "1024px" },
+      { "name": "max", "value": "1152px", "note": "max-w-6xl — the system's max content width" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Full Ink fill at rest. Inverts to white on hover. Physical scale press.",
+      "html": "<button class=\"ds-btn-primary\">BUY PRIVATELY</button>",
+      "css": ".ds-btn-primary { display: inline-flex; align-items: center; justify-content: center; background: oklch(0.145 0 0); color: oklch(1 0 0); border: 1px solid oklch(0.145 0 0); padding: 10px 20px; font-size: 11px; font-weight: 400; letter-spacing: 0.18em; text-transform: uppercase; border-radius: 0; cursor: pointer; transition: background-color 150ms cubic-bezier(0.23, 1, 0.32, 1), color 150ms cubic-bezier(0.23, 1, 0.32, 1); transform-origin: center; } .ds-btn-primary:hover { background: oklch(1 0 0); color: oklch(0.145 0 0); } .ds-btn-primary:active { transform: scale(0.97); transition: transform 150ms cubic-bezier(0.23, 1, 0.32, 1); } .ds-btn-primary:focus-visible { outline: none; box-shadow: 0 0 0 2px oklch(0.145 0 0), 0 0 0 4px oklch(1 0 0); }"
+    },
+    {
+      "name": "Ghost Button",
+      "kind": "button",
+      "refersTo": "button-ghost",
+      "description": "Transparent. Border-faint at rest, sharpens to ink on hover. Used for secondary and tertiary actions.",
+      "html": "<button class=\"ds-btn-ghost\">AUTHENTICATE &amp; REVEAL</button>",
+      "css": ".ds-btn-ghost { display: inline-flex; align-items: center; gap: 8px; background: transparent; color: oklch(0.708 0 0); border: 1px solid oklch(0.708 0 0 / 40%); padding: 6px 12px; font-size: 10px; font-weight: 400; letter-spacing: 0.15em; text-transform: uppercase; border-radius: 0; cursor: pointer; transition: color 150ms cubic-bezier(0.23, 1, 0.32, 1), border-color 150ms cubic-bezier(0.23, 1, 0.32, 1); } .ds-btn-ghost:hover { color: oklch(0.145 0 0); border-color: oklch(0.145 0 0); } .ds-btn-ghost:focus-visible { outline: none; border-color: oklch(0.145 0 0); }"
+    },
+    {
+      "name": "Destructive Button",
+      "kind": "button",
+      "refersTo": "button-destructive",
+      "description": "Dispute actions only. Transparent background, destructive border and text. Hover tints background faintly.",
+      "html": "<button class=\"ds-btn-destructive\">DISPUTE</button>",
+      "css": ".ds-btn-destructive { display: inline-flex; align-items: center; background: transparent; color: oklch(0.577 0.245 27.325); border: 1px solid oklch(0.577 0.245 27.325 / 50%); padding: 6px 12px; font-size: 10px; font-weight: 400; letter-spacing: 0.15em; text-transform: uppercase; border-radius: 0; cursor: pointer; transition: background-color 150ms cubic-bezier(0.23, 1, 0.32, 1); } .ds-btn-destructive:hover { background: oklch(0.577 0.245 27.325 / 8%); }"
+    },
+    {
+      "name": "Filter Chip",
+      "kind": "chip",
+      "refersTo": "chip-category",
+      "description": "Marketplace category filter. Resting: ghost. Active: ink fill, white text — mirrors primary button pattern.",
+      "html": "<div class=\"ds-chip-group\"><button class=\"ds-chip ds-chip-active\">DATA</button><button class=\"ds-chip\">RELAY</button><button class=\"ds-chip\">COMPUTE</button></div>",
+      "css": ".ds-chip-group { display: flex; gap: 8px; flex-wrap: wrap; } .ds-chip { background: transparent; color: oklch(0.556 0 0); border: 1px solid oklch(0.922 0 0 / 60%); padding: 6px 12px; font-size: 10px; font-weight: 400; letter-spacing: 0.18em; text-transform: uppercase; border-radius: 0; cursor: pointer; transition: background-color 150ms cubic-bezier(0.23, 1, 0.32, 1), color 150ms cubic-bezier(0.23, 1, 0.32, 1), border-color 150ms cubic-bezier(0.23, 1, 0.32, 1); } .ds-chip:hover { border-color: oklch(0.145 0 0); color: oklch(0.145 0 0); } .ds-chip-active { background: oklch(0.145 0 0); color: oklch(1 0 0); border-color: oklch(0.145 0 0); }"
+    },
+    {
+      "name": "Service Card",
+      "kind": "card",
+      "refersTo": "service-card",
+      "description": "Flat at rest. Hard-edge offset shadow + full border on hover. The signature interactive card pattern.",
+      "html": "<div class=\"ds-service-card\"><span class=\"ds-service-badge\">DATA</span><h2 class=\"ds-service-name\">Encrypted Data Feed</h2><div class=\"ds-service-meta\">Seller &nbsp;<code class=\"ds-address\">3xQ7…f2Kp</code></div><button class=\"ds-service-cta\">BUY PRIVATELY</button></div>",
+      "css": ".ds-service-card { position: relative; display: flex; flex-direction: column; gap: 20px; background: oklch(1 0 0); border: 1px solid oklch(0.922 0 0); padding: 24px; transition: border-color 150ms cubic-bezier(0.23, 1, 0.32, 1), box-shadow 150ms cubic-bezier(0.23, 1, 0.32, 1); } .ds-service-card:hover { border-color: oklch(0.145 0 0); box-shadow: 4px 4px 0 0 oklch(0.145 0 0); } .ds-service-badge { display: inline-block; border: 1px solid oklch(0.922 0 0 / 80%); padding: 2px 8px; font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: oklch(0.556 0 0); border-radius: 0; } .ds-service-name { font-size: 1rem; font-weight: 600; line-height: 1.4; letter-spacing: -0.01em; color: oklch(0.145 0 0); margin: 0; } .ds-service-meta { display: flex; align-items: center; gap: 10px; font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: oklch(0.708 0 0); } .ds-address { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; color: oklch(0.439 0 0); font-style: normal; } .ds-service-cta { background: oklch(0.145 0 0); color: oklch(1 0 0); border: 1px solid oklch(0.145 0 0); padding: 10px; font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; border-radius: 0; cursor: pointer; width: 100%; margin-top: auto; transition: background-color 150ms cubic-bezier(0.23, 1, 0.32, 1), color 150ms cubic-bezier(0.23, 1, 0.32, 1); } .ds-service-cta:hover { background: oklch(1 0 0); color: oklch(0.145 0 0); }"
+    },
+    {
+      "name": "Private Balance Card",
+      "kind": "card",
+      "refersTo": "private-card",
+      "description": "The trust-boundary card. Ink fill signals TEE/shielded context. The only black surface in the system.",
+      "html": "<div class=\"ds-private-card\"><div class=\"ds-private-header\"><span class=\"ds-private-label\">Private Balance</span><span class=\"ds-private-badge\"><svg width=\"11\" height=\"11\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\"><path d=\"M12 22s8-4 8-10V5l-8-2-8 2v7c0 6 8 10 8 10z\"/></svg> MagicBlock PER</span></div><div class=\"ds-private-amount\"><span class=\"ds-private-redacted\">██████</span></div><button class=\"ds-private-reveal\"><svg width=\"11\" height=\"11\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><rect x=\"3\" y=\"11\" width=\"18\" height=\"11\" rx=\"2\" ry=\"2\"/><path d=\"M7 11V7a5 5 0 0 1 10 0v4\"/></svg> AUTHENTICATE &amp; REVEAL</button></div>",
+      "css": ".ds-private-card { display: flex; flex-direction: column; gap: 12px; background: oklch(0.145 0 0); border: 1px solid oklch(0.145 0 0); padding: 24px; border-radius: 0; } .ds-private-header { display: flex; align-items: center; justify-content: space-between; } .ds-private-label { font-size: 10px; letter-spacing: 0.20em; text-transform: uppercase; color: oklch(1 0 0 / 60%); } .ds-private-badge { display: flex; align-items: center; gap: 4px; font-size: 10px; color: oklch(1 0 0 / 40%); } .ds-private-amount { display: flex; align-items: center; gap: 10px; } .ds-private-redacted { font-size: 30px; font-weight: 900; letter-spacing: -0.02em; color: oklch(1 0 0 / 30%); } .ds-private-reveal { display: inline-flex; align-items: center; gap: 8px; align-self: flex-start; background: transparent; color: oklch(1 0 0 / 60%); border: 1px solid oklch(1 0 0 / 20%); padding: 6px 12px; font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; border-radius: 0; cursor: pointer; transition: color 150ms cubic-bezier(0.23, 1, 0.32, 1), border-color 150ms cubic-bezier(0.23, 1, 0.32, 1); } .ds-private-reveal:hover { color: oklch(1 0 0); border-color: oklch(1 0 0); }"
+    },
+    {
+      "name": "Navbar",
+      "kind": "nav",
+      "refersTo": "nav-link",
+      "description": "Fixed top. bg-white/95 backdrop-blur (functional only). Wallet button is primary pattern in nav context.",
+      "html": "<header class=\"ds-navbar\"><a class=\"ds-nav-wordmark\" href=\"/marketplace\">COVERT</a><nav class=\"ds-nav-links\"><a class=\"ds-nav-link\" href=\"/marketplace\">Marketplace</a><a class=\"ds-nav-link ds-nav-active\" href=\"/dashboard\">Dashboard</a></nav><button class=\"ds-nav-wallet\">0x3f…2a9c</button></header>",
+      "css": ".ds-navbar { position: fixed; top: 0; left: 0; right: 0; z-index: 50; display: flex; align-items: center; justify-content: space-between; height: 56px; padding: 0 24px; background: oklch(1 0 0 / 95%); backdrop-filter: blur(4px); border-bottom: 1px solid oklch(0.922 0 0); } .ds-nav-wordmark { font-size: 14px; font-weight: 700; letter-spacing: 0.20em; text-transform: uppercase; color: oklch(0.145 0 0); text-decoration: none; transition: opacity 150ms cubic-bezier(0.23, 1, 0.32, 1); } .ds-nav-wordmark:hover { opacity: 0.7; } .ds-nav-links { display: flex; align-items: center; gap: 24px; } .ds-nav-link { font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: oklch(0.708 0 0); text-decoration: none; transition: color 150ms cubic-bezier(0.23, 1, 0.32, 1); } .ds-nav-link:hover { color: oklch(0.145 0 0); } .ds-nav-active { color: oklch(0.145 0 0); font-weight: 600; } .ds-nav-wallet { background: oklch(0.145 0 0); color: oklch(1 0 0); border: 1px solid oklch(0.145 0 0); padding: 8px 20px; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; border-radius: 0; cursor: pointer; transition: background-color 150ms cubic-bezier(0.23, 1, 0.32, 1), color 150ms cubic-bezier(0.23, 1, 0.32, 1), transform 150ms cubic-bezier(0.23, 1, 0.32, 1); } .ds-nav-wallet:hover { background: oklch(1 0 0); color: oklch(0.145 0 0); } .ds-nav-wallet:active { transform: scale(0.97); }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Sealed Brief",
+    "overview": "Covert's visual language is borrowed from classified document design: dense information without decoration, high contrast without flourish, hierarchy expressed entirely through weight and tracking. Every element earns its place. Nothing introduces itself; everything presents itself.\n\nThe system rejects crypto's standard aesthetic reflex — neon on black, gradient text, glassmorphism as atmosphere — and refuses the inverse reflex too: it is not trying to look like a friendly SaaS tool. It occupies a third position: precision document. Think redacted government file, not dashboard. The monochrome is not a limitation; it is the argument.\n\nColor plays zero decorative role. The single chromatic exception is the destructive (dispute/error) state. Its rarity is structural. Everything else is achromatic.",
+    "keyCharacteristics": [
+      "Zero-radius borders on every interactive element (sharp = precise)",
+      "All-caps labels with wide tracking (0.18–0.22em) as the primary labeling language",
+      "Ink-on-white as the default surface; black-on-black for the private/shielded context",
+      "Offset shadow (4px 4px 0 0 #000) on hover for service cards — tactile without softness",
+      "scale(0.97) press feedback on all primary buttons — physical confirmation of intent"
+    ],
+    "rules": [
+      { "name": "The One Chromatic Rule",     "body": "Color exists only to signal a state requiring immediate attention (dispute, error) or a system boundary (private/shielded context). It never appears for decoration, branding, or visual interest. If you are adding color to make something look better, stop.", "section": "colors" },
+      { "name": "The Label Law",              "body": "Every UI label — section headers, table columns, button text, status chips, eyebrows, nav links — is ALL CAPS with tracking ≥0.18em. No exceptions.", "section": "typography" },
+      { "name": "The Weight-Only Hierarchy Rule", "body": "Hierarchy is carried by weight contrast (400 vs 900), not by large size differences alone.", "section": "typography" },
+      { "name": "The Zero-Blur Rule",         "body": "No soft ambient shadows, no blur in any shadow value. If depth is expressed, it is expressed through hard-edge offset shadows only.", "section": "elevation" },
+      { "name": "The Flat-By-Default Rule",   "body": "Surfaces rest flat. The card lift shadow appears only on hover. The dialog shadow appears only in modal context. Nothing is elevated at rest.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do use zero border-radius on every interactive element: buttons, inputs, cards, chips, dialogs.",
+      "Do write every UI label in ALL CAPS with letter-spacing: 0.18em minimum.",
+      "Do express button hover as a full fill-inversion (ink to white or white to ink).",
+      "Do use the hard-edge 4px 4px 0 0 offset shadow exclusively for card hover lift.",
+      "Do use the Private Surface black only for the shielded/TEE balance context.",
+      "Do use scale(0.97) on :active for all primary buttons.",
+      "Do use cubic-bezier(0.16, 1, 0.3, 1) for entry animations (0.75s) and cubic-bezier(0.23, 1, 0.32, 1) for micro-interactions (150ms).",
+      "Do cap body prose at 65-75ch."
+    ],
+    "donts": [
+      "Don't use gradient text (background-clip: text). Forbidden.",
+      "Don't use neon, vivid color washes, or glow effects.",
+      "Don't use glassmorphism decoratively. The navbar backdrop-blur is the only functional instance.",
+      "Don't add soft ambient shadows. The Zero-Blur Rule is absolute.",
+      "Don't use rounded corners. Every corner is 0px.",
+      "Don't use color for decoration.",
+      "Don't animate layout properties. Animate transform and opacity only.",
+      "Don't use ease-in or linear timing.",
+      "Don't use transition: all. Always declare specific properties."
+    ]
+  }
+}

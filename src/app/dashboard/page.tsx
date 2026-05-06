@@ -47,14 +47,19 @@ function Dialog({
 }) {
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center">
-      {/* Backdrop */}
+      {/* Backdrop — fades in */}
       <div
-        className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+        className="absolute inset-0 bg-black/40 backdrop-blur-sm animate-backdrop-in"
         onClick={onClose}
         aria-hidden
       />
-      {/* Panel */}
-      <div className="relative z-10 w-full max-w-md bg-white border border-black/20 p-8 shadow-[8px_8px_0_0_#000]">
+      {/* Panel — materialises: opacity + scale */}
+      <div
+        className="relative z-10 w-full max-w-md bg-white border border-black/20 p-8 shadow-[8px_8px_0_0_#000]"
+        style={{
+          animation: 'panelIn 0.25s cubic-bezier(0.16,1,0.3,1) both',
+        }}
+      >
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-sm font-bold tracking-[0.12em] uppercase text-black">
             {title}
@@ -63,7 +68,7 @@ function Dialog({
             type="button"
             onClick={onClose}
             aria-label="Close"
-            className="text-neutral-400 hover:text-black transition-colors"
+            className="text-neutral-400 transition-[color] duration-[150ms] ease-[cubic-bezier(0.23,1,0.32,1)] hover:text-black"
           >
             <X size={16} strokeWidth={2} />
           </button>
@@ -500,14 +505,14 @@ function ActiveDeals({ deals, address, handleComplete, handleDelivered, handleDi
                     <button
                       type="button"
                       onClick={() => handleComplete(deal)}
-                      className="border border-black/30 px-3 py-1 text-[10px] tracking-widest uppercase text-neutral-600 hover:border-black hover:text-black transition-colors w-fit"
+                      className="transition-[color,border-color] duration-[150ms] ease-[cubic-bezier(0.23,1,0.32,1)] border border-black/30 px-3 py-1 text-[10px] tracking-widest uppercase text-neutral-600 hover:border-black hover:text-black w-fit"
                     >
                       Mark Received
                     </button>
                     <button
                       type="button"
                       onClick={() => handleDispute(deal.id)}
-                      className="border border-red-300 px-3 py-1 text-[10px] tracking-widest uppercase text-red-500 hover:bg-red-50 transition-colors w-fit"
+                      className="transition-[background-color] duration-[150ms] ease-[cubic-bezier(0.23,1,0.32,1)] border border-red-300 px-3 py-1 text-[10px] tracking-widest uppercase text-red-500 hover:bg-red-50 w-fit"
                     >
                       Dispute
                     </button>
@@ -517,14 +522,14 @@ function ActiveDeals({ deals, address, handleComplete, handleDelivered, handleDi
                     <button
                       type="button"
                       onClick={() => handleComplete(deal)}
-                      className="border border-black/30 px-3 py-1 text-[10px] tracking-widest uppercase text-neutral-600 hover:border-black hover:text-black transition-colors w-fit"
+                      className="transition-[color,border-color] duration-[150ms] ease-[cubic-bezier(0.23,1,0.32,1)] border border-black/30 px-3 py-1 text-[10px] tracking-widest uppercase text-neutral-600 hover:border-black hover:text-black w-fit"
                     >
                       Confirm Receipt
                     </button>
                     <button
                       type="button"
                       onClick={() => handleDispute(deal.id)}
-                      className="border border-red-300 px-3 py-1 text-[10px] tracking-widest uppercase text-red-500 hover:bg-red-50 transition-colors w-fit"
+                      className="transition-[background-color] duration-[150ms] ease-[cubic-bezier(0.23,1,0.32,1)] border border-red-300 px-3 py-1 text-[10px] tracking-widest uppercase text-red-500 hover:bg-red-50 w-fit"
                     >
                       Dispute
                     </button>
@@ -533,7 +538,7 @@ function ActiveDeals({ deals, address, handleComplete, handleDelivered, handleDi
                   <button
                     type="button"
                     onClick={() => handleDelivered(deal.id)}
-                    className="border border-black bg-black px-3 py-1 text-[10px] tracking-widest uppercase text-white hover:bg-white hover:text-black transition-colors w-fit"
+                    className="btn-press border border-black bg-black px-3 py-1 text-[10px] tracking-widest uppercase text-white transition-[background-color,color] duration-[150ms] ease-[cubic-bezier(0.23,1,0.32,1)] hover:bg-white hover:text-black w-fit"
                   >
                     Mark Delivered
                   </button>
@@ -548,8 +553,8 @@ function ActiveDeals({ deals, address, handleComplete, handleDelivered, handleDi
         })}
 
         {deals.length === 0 && (
-          <div className="px-5 py-8 text-center text-xs text-neutral-400">
-            No active deals.
+          <div className="px-5 py-10 text-center">
+            <p className="text-[10px] tracking-[0.22em] uppercase text-neutral-400">No active deals</p>
           </div>
         )}
       </div>
@@ -604,8 +609,8 @@ function TxHistory({ transactions }: { transactions: any[] }) {
         ))}
 
         {transactions.length === 0 && (
-          <div className="px-5 py-8 text-center text-xs text-neutral-400">
-            No transactions yet.
+          <div className="px-5 py-10 text-center">
+            <p className="text-[10px] tracking-[0.22em] uppercase text-neutral-400">No transactions yet</p>
           </div>
         )}
       </div>
@@ -1077,7 +1082,7 @@ export default function DashboardPage() {
                 type="button"
                 id="deposit-btn"
                 onClick={() => setDialog("deposit")}
-                className="flex items-center gap-2 border border-black bg-black px-4 py-2 text-[11px] tracking-[0.15em] uppercase text-white hover:bg-white hover:text-black transition-colors"
+                className="btn-press flex items-center gap-2 border border-black bg-black px-4 py-2 text-[11px] tracking-[0.15em] uppercase text-white transition-[background-color,color] duration-[150ms] ease-[cubic-bezier(0.23,1,0.32,1)] hover:bg-white hover:text-black"
               >
                 <ArrowDownToLine size={12} strokeWidth={2} />
                 Deposit
@@ -1088,7 +1093,7 @@ export default function DashboardPage() {
                 type="button"
                 id="withdraw-btn"
                 onClick={() => setDialog("withdraw")}
-                className="flex items-center gap-2 border border-black/30 px-4 py-2 text-[11px] tracking-[0.15em] uppercase text-neutral-600 hover:border-black hover:text-black transition-colors"
+                className="btn-press flex items-center gap-2 border border-black/30 px-4 py-2 text-[11px] tracking-[0.15em] uppercase text-neutral-600 transition-[color,border-color] duration-[150ms] ease-[cubic-bezier(0.23,1,0.32,1)] hover:border-black hover:text-black"
               >
                 <ArrowUpFromLine size={12} strokeWidth={2} />
                 Withdraw
@@ -1098,7 +1103,7 @@ export default function DashboardPage() {
               <button
                 type="button"
                 onClick={() => setDialog("list")}
-                className="flex items-center gap-2 border border-black/30 px-4 py-2 text-[11px] tracking-[0.15em] uppercase text-neutral-600 hover:border-black hover:text-black transition-colors"
+                className="flex items-center gap-2 border border-black/30 px-4 py-2 text-[11px] tracking-[0.15em] uppercase text-neutral-600 transition-[color,border-color] duration-[150ms] ease-[cubic-bezier(0.23,1,0.32,1)] hover:border-black hover:text-black"
               >
                 <ListPlus size={12} strokeWidth={2} />
                 List Service
@@ -1109,7 +1114,7 @@ export default function DashboardPage() {
                 type="button"
                 id="disconnect-btn"
                 onClick={() => open()}
-                className="flex items-center gap-2 border border-black/15 px-3 py-2 text-[11px] tracking-[0.15em] uppercase text-neutral-400 hover:border-black/40 hover:text-neutral-600 transition-colors"
+                className="flex items-center gap-2 border border-black/15 px-3 py-2 text-[11px] tracking-[0.15em] uppercase text-neutral-400 transition-[color,border-color] duration-[150ms] ease-[cubic-bezier(0.23,1,0.32,1)] hover:border-black/40 hover:text-neutral-600"
               >
                 <LogOut size={12} strokeWidth={2} />
                 Disconnect
@@ -1132,26 +1137,27 @@ export default function DashboardPage() {
             />
           </div>
 
-          {/* ── Agent Analytics ────────────────────────────────────────── */}
-          <section className="mt-12">
+          {/* ── Agent Analytics ────────────────────────────────────────────── */}
+          <section className="mt-10">
             <h2 className="text-xs tracking-[0.22em] uppercase text-neutral-600 mb-5">
               Agent Analytics
             </h2>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-              <div className="border border-black/10 p-4">
-                <p className="text-[10px] tracking-widest uppercase text-neutral-500 mb-1">Active Listings</p>
+            {/* 1px-gutter grid — mirrors balance card pattern */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-px bg-black/10">
+              <div className="bg-white p-5">
+                <p className="text-[10px] tracking-widest uppercase text-neutral-500 mb-2">Active Listings</p>
                 <p className="text-2xl font-black text-black">{analytics.totalListings}</p>
               </div>
-              <div className="border border-black/10 p-4">
-                <p className="text-[10px] tracking-widest uppercase text-neutral-500 mb-1">Total Sales</p>
+              <div className="bg-white p-5">
+                <p className="text-[10px] tracking-widest uppercase text-neutral-500 mb-2">Total Sales</p>
                 <p className="text-2xl font-black text-black">{analytics.totalDeals}</p>
               </div>
-              <div className="border border-black/10 p-4">
-                <p className="text-[10px] tracking-widest uppercase text-neutral-500 mb-1">Completed</p>
+              <div className="bg-white p-5">
+                <p className="text-[10px] tracking-widest uppercase text-neutral-500 mb-2">Completed</p>
                 <p className="text-2xl font-black text-black">{analytics.completedDeals}</p>
               </div>
-              <div className="border border-black/10 p-4">
-                <p className="text-[10px] tracking-widest uppercase text-neutral-500 mb-1">Pending</p>
+              <div className="bg-white p-5">
+                <p className="text-[10px] tracking-widest uppercase text-neutral-500 mb-2">Pending</p>
                 <p className="text-2xl font-black text-black">{analytics.pendingDeals}</p>
               </div>
             </div>

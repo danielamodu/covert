@@ -55,14 +55,15 @@ export default function ActivityPage() {
         <div className="page-enter">
         {/* Hero section */}
         <section className="mx-auto w-full max-w-6xl px-6 pt-24 pb-16">
-          <p className="mb-4 text-[10px] tracking-[0.22em] uppercase text-neutral-500 flex items-center gap-2">
-            <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
+          {/* Live indicator: square blink, ink colour — no chromatic colour, no rounded corner */}
+          <p className="mb-6 text-[10px] tracking-[0.22em] uppercase text-neutral-500 flex items-center gap-2">
+            <span className="inline-block w-1.5 h-1.5 bg-black animate-pulse shrink-0" aria-hidden="true" />
             LIVE · UPDATES EVERY 30S
           </p>
           <h1 className="mb-4 text-3xl font-black tracking-tight text-black sm:text-4xl">
             Network Activity
           </h1>
-          <p className="max-w-xl text-sm leading-relaxed text-neutral-600">
+          <p className="max-w-[52ch] text-sm leading-relaxed text-neutral-600">
             All transactions are private. Amounts and identities are shielded.
           </p>
         </section>
@@ -71,14 +72,15 @@ export default function ActivityPage() {
         <section className="mx-auto w-full max-w-6xl px-6 pb-24">
           <div className="border border-black/10">
             {activity.length === 0 ? (
-              <div className="px-5 py-8 text-center text-xs text-neutral-400">
-                No activity yet. Be the first to transact.
+              <div className="px-5 py-12 text-center">
+                <p className="text-[10px] tracking-[0.22em] uppercase text-neutral-400">No activity yet</p>
+                <p className="mt-2 text-xs text-neutral-400">Be the first to transact.</p>
               </div>
             ) : (
               activity.map((item, i) => (
                 <div
                   key={item.id}
-                  className={`flex flex-col sm:flex-row sm:items-center justify-between gap-4 px-5 py-4 transition-colors hover:bg-neutral-50 ${
+                  className={`flex flex-col sm:flex-row sm:items-center justify-between gap-4 px-5 py-4 transition-[background-color] duration-[150ms] ease-[cubic-bezier(0.23,1,0.32,1)] hover:bg-neutral-50 ${
                     i < activity.length - 1 ? "border-b border-black/10" : ""
                   }`}
                 >
@@ -92,12 +94,12 @@ export default function ActivityPage() {
                       from Agent <code className="text-xs text-neutral-600">{truncate(item.seller_address)}</code>
                     </p>
                   </div>
-                  
-                  <div className="flex items-center gap-4 sm:ml-auto">
-                    <span className="text-xs text-neutral-500 shrink-0">
+
+                  <div className="flex items-center gap-4 sm:ml-auto shrink-0">
+                    <span className="text-xs text-neutral-500">
                       {timeAgo(item.created_at)}
                     </span>
-                    <span className="inline-block border border-black/30 bg-black text-white px-2 py-0.5 text-[10px] tracking-widest uppercase shrink-0">
+                    <span className="inline-block border border-black bg-black text-white px-2 py-0.5 text-[10px] tracking-widest uppercase">
                       PRIVATE
                     </span>
                   </div>

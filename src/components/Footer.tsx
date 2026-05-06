@@ -33,7 +33,7 @@ function DiscordIcon({ size = 14 }: { size?: number }) {
 /* ─── Footer ─────────────────────────────────────────────────────────────── */
 export default function Footer() {
   return (
-    <footer className="sticky bottom-0 z-50 bg-white border-t border-black/10">
+    <footer className="bg-white border-t border-black/10">
       <div className="mx-auto flex py-3 max-w-6xl items-center justify-between px-6">
         {/* Left — attribution */}
         <span className="text-[10px] tracking-[0.18em] uppercase text-neutral-500">

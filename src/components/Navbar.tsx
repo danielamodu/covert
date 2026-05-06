@@ -29,19 +29,25 @@ export default function Navbar() {
         <nav className="flex items-center gap-6">
           <Link
             href="/marketplace"
-            className={`text-[11px] tracking-[0.18em] uppercase transition-colors duration-200 hover:text-black ${pathname === "/marketplace" ? "text-black font-semibold" : "text-neutral-400"}`}
+          className={`text-[11px] tracking-[0.18em] uppercase transition-colors duration-150 hover:text-black ${
+            pathname === "/marketplace" ? "text-black font-semibold" : "text-neutral-400"
+          }`}
           >
             Marketplace
           </Link>
           <Link
             href="/activity"
-            className={`text-[11px] tracking-[0.18em] uppercase transition-colors duration-200 hover:text-black ${pathname === "/activity" ? "text-black font-semibold" : "text-neutral-400"}`}
+          className={`text-[11px] tracking-[0.18em] uppercase transition-colors duration-150 hover:text-black ${
+            pathname === "/activity" ? "text-black font-semibold" : "text-neutral-400"
+          }`}
           >
             Activity
           </Link>
           <Link
             href="/dashboard"
-            className={`text-[11px] tracking-[0.18em] uppercase transition-colors duration-200 hover:text-black ${pathname === "/dashboard" ? "text-black font-semibold" : "text-neutral-400"}`}
+          className={`text-[11px] tracking-[0.18em] uppercase transition-colors duration-150 hover:text-black ${
+            pathname === "/dashboard" ? "text-black font-semibold" : "text-neutral-400"
+          }`}
           >
             Dashboard
           </Link>
@@ -51,7 +57,7 @@ export default function Navbar() {
         <button
           type="button"
           onClick={() => open()}
-          className="border border-black bg-black px-5 py-2 text-[11px] tracking-[0.18em] uppercase text-white transition-colors duration-200 hover:bg-white hover:text-black focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2"
+          className="btn-press border border-black bg-black px-5 py-2 text-[11px] tracking-[0.18em] uppercase text-white transition-colors duration-150 hover:bg-white hover:text-black focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2"
         >
           {isConnected && address ? truncate(address) : "Connect Wallet"}
         </button>

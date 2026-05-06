@@ -135,11 +135,14 @@ function BuyDialog({ serviceName, sellerAddress, serviceId, serviceWebhookUrl, o
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center">
       <div
-        className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+        className="absolute inset-0 bg-black/40 backdrop-blur-sm animate-backdrop-in"
         onClick={onClose}
         aria-hidden
       />
-      <div className="relative z-10 w-full max-w-md bg-white border border-black/20 p-8 shadow-[8px_8px_0_0_#000]">
+      <div
+        className="relative z-10 w-full max-w-md bg-white border border-black/20 p-8 shadow-[8px_8px_0_0_#000]"
+        style={{ animation: 'panelIn 0.25s cubic-bezier(0.16,1,0.3,1) both' }}
+      >
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-sm font-bold tracking-[0.12em] uppercase text-black">
@@ -149,7 +152,7 @@ function BuyDialog({ serviceName, sellerAddress, serviceId, serviceWebhookUrl, o
             type="button"
             onClick={onClose}
             aria-label="Close"
-            className="text-neutral-400 hover:text-black transition-colors"
+            className="text-neutral-400 transition-[color] duration-[150ms] ease-[cubic-bezier(0.23,1,0.32,1)] hover:text-black"
           >
             <X size={16} strokeWidth={2} />
           </button>
@@ -199,7 +202,7 @@ function BuyDialog({ serviceName, sellerAddress, serviceId, serviceWebhookUrl, o
           type="button"
           onClick={handlePurchase}
           disabled={status === "loading" || status === "success" || !amount}
-          className="mt-6 w-full border border-black bg-black py-3 text-[11px] tracking-[0.18em] uppercase text-white hover:bg-white hover:text-black transition-colors disabled:opacity-50 disabled:hover:bg-black disabled:hover:text-white"
+          className="btn-press mt-6 w-full border border-black bg-black py-3 text-[11px] tracking-[0.18em] uppercase text-white transition-[background-color,color] duration-[150ms] ease-[cubic-bezier(0.23,1,0.32,1)] hover:bg-white hover:text-black disabled:opacity-50 disabled:hover:bg-black disabled:hover:text-white"
         >
           {status === "loading" ? "Processing..." : "Confirm Private Purchase"}
         </button>
@@ -276,11 +279,23 @@ function BidDialog({ service, onClose }: { service: any; onClose: () => void }) 
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center">
-      <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={onClose} aria-hidden />
-      <div className="relative z-10 w-full max-w-md bg-white border border-black/20 p-8 shadow-[8px_8px_0_0_#000]">
+      <div
+        className="absolute inset-0 bg-black/40 backdrop-blur-sm animate-backdrop-in"
+        onClick={onClose}
+        aria-hidden
+      />
+      <div
+        className="relative z-10 w-full max-w-md bg-white border border-black/20 p-8 shadow-[8px_8px_0_0_#000]"
+        style={{ animation: 'panelIn 0.25s cubic-bezier(0.16,1,0.3,1) both' }}
+      >
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-sm font-bold tracking-[0.12em] uppercase text-black">Place Sealed Bid</h2>
-          <button type="button" onClick={onClose} aria-label="Close" className="text-neutral-400 hover:text-black transition-colors">
+          <button
+            type="button"
+            onClick={onClose}
+            aria-label="Close"
+            className="text-neutral-400 transition-[color] duration-[150ms] ease-[cubic-bezier(0.23,1,0.32,1)] hover:text-black"
+          >
             <X size={16} strokeWidth={2} />
           </button>
         </div>
@@ -321,7 +336,7 @@ function BidDialog({ service, onClose }: { service: any; onClose: () => void }) 
           type="button"
           onClick={handleBid}
           disabled={status === "loading" || status === "success" || !bidAmount}
-          className="mt-6 w-full border border-black bg-black py-3 text-[11px] tracking-[0.18em] uppercase text-white hover:bg-white hover:text-black transition-colors disabled:opacity-50 disabled:hover:bg-black disabled:hover:text-white"
+          className="btn-press mt-6 w-full border border-black bg-black py-3 text-[11px] tracking-[0.18em] uppercase text-white transition-[background-color,color] duration-[150ms] ease-[cubic-bezier(0.23,1,0.32,1)] hover:bg-white hover:text-black disabled:opacity-50 disabled:hover:bg-black disabled:hover:text-white"
         >
           {status === "loading" ? "Placing Bid..." : "Place Private Bid"}
         </button>
@@ -335,7 +350,7 @@ function SimilarCard({ service }: { service: any }) {
   return (
     <Link
       href={`/service/${service.id}`}
-      className="group flex flex-col gap-5 border border-black/10 bg-white p-6 transition-all duration-200 hover:border-black hover:shadow-[4px_4px_0_0_#000]"
+      className="group flex flex-col gap-5 border border-black/10 bg-white p-6 transition-[border-color,box-shadow] duration-[150ms] ease-[cubic-bezier(0.23,1,0.32,1)] hover:border-black hover:shadow-[4px_4px_0_0_#000]"
     >
       <div className="flex items-start justify-between">
         <span className="inline-block border border-black/30 px-2 py-0.5 text-[10px] tracking-widest uppercase text-neutral-600">
