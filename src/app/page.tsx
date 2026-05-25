@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useAppKit, useAppKitAccount } from "@reown/appkit/react";
+import { Twitter, Github, MessageCircle } from "lucide-react";
 
 function GithubIcon({ size = 14 }: { size?: number }) {
   return (
@@ -60,45 +61,66 @@ function LandingNavbar() {
 
 function LandingFooter() {
   return (
-    <footer className="bg-black border-t border-white/10">
-      <div className="mx-auto flex py-6 max-w-6xl items-center justify-between px-6">
-        <span className="text-[10px] tracking-[0.18em] uppercase text-neutral-500">
-          Powered by MagicBlock PER
-        </span>
-
-        <div className="flex items-center gap-4">
-          <a
-            href="https://github.com/danielamodu"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="GitHub"
-            className="text-neutral-500 transition-[color] duration-[150ms] ease-[cubic-bezier(0.23,1,0.32,1)] hover:text-white"
-          >
-            <GithubIcon size={14} />
+    <footer className="pb-6 pt-16 lg:pb-8 lg:pt-24 border-t border-white/10">
+      <div className="px-4 lg:px-8 max-w-6xl mx-auto">
+        <div className="md:flex md:items-start md:justify-between">
+          <a href="/" className="flex items-center gap-x-2">
+            <span className="font-bold text-xl tracking-[0.2em] uppercase text-white">Covert</span>
           </a>
-          <a
-            href="https://x.com/fortyxbt"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="Twitter / X"
-            className="text-neutral-500 transition-[color] duration-[150ms] ease-[cubic-bezier(0.23,1,0.32,1)] hover:text-white"
-          >
-            <TwitterIcon size={14} />
-          </a>
-          <a
-            href="https://discord.com/fortyxbt"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="Discord"
-            className="text-neutral-500 transition-[color] duration-[150ms] ease-[cubic-bezier(0.23,1,0.32,1)] hover:text-white"
-          >
-            <DiscordIcon size={14} />
-          </a>
+          <ul className="flex list-none mt-6 md:mt-0 space-x-3">
+            <li>
+              <a href="https://twitter.com/fortyxbt" target="_blank" aria-label="Twitter" className="h-10 w-10 rounded-full border border-white/20 flex items-center justify-center hover:border-white transition-colors">
+                <Twitter className="h-4 w-4 text-white" />
+              </a>
+            </li>
+            <li>
+              <a href="https://github.com/danielamodu" target="_blank" aria-label="GitHub" className="h-10 w-10 rounded-full border border-white/20 flex items-center justify-center hover:border-white transition-colors">
+                <Github className="h-4 w-4 text-white" />
+              </a>
+            </li>
+            <li>
+              <a href="#" target="_blank" aria-label="Discord" className="h-10 w-10 rounded-full border border-white/20 flex items-center justify-center hover:border-white transition-colors">
+                <MessageCircle className="h-4 w-4 text-white" />
+              </a>
+            </li>
+          </ul>
         </div>
-
-        <span className="text-[10px] text-neutral-500">
-          © {new Date().getFullYear()}
-        </span>
+        <div className="border-t border-white/10 mt-6 pt-6 md:mt-4 md:pt-8 lg:grid lg:grid-cols-10">
+          <nav className="lg:mt-0 lg:col-[4/11]">
+            <ul className="list-none flex flex-wrap -my-1 -mx-2 lg:justify-end">
+              {[
+                { href: "/marketplace", label: "Marketplace" },
+                { href: "/docs", label: "Docs" },
+                { href: "/activity", label: "Activity" },
+                { href: "https://npmjs.com/package/covert-sdk", label: "SDK" },
+              ].map((link, i) => (
+                <li key={i} className="my-1 mx-2 shrink-0">
+                  <a href={link.href} className="text-sm text-white/60 underline-offset-4 hover:text-white transition-colors">
+                    {link.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+          <div className="mt-6 lg:mt-0 lg:col-[4/11]">
+            <ul className="list-none flex flex-wrap -my-1 -mx-3 lg:justify-end">
+              {[
+                { href: "#", label: "Privacy" },
+                { href: "#", label: "Terms" },
+              ].map((link, i) => (
+                <li key={i} className="my-1 mx-3 shrink-0">
+                  <a href={link.href} className="text-sm text-white/40 underline-offset-4 hover:text-white/60 transition-colors">
+                    {link.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div className="mt-6 text-sm leading-6 text-white/40 whitespace-nowrap lg:mt-0 lg:row-[1/3] lg:col-[1/4]">
+            <div>© 2026 Covert</div>
+            <div>Built on MagicBlock PER</div>
+          </div>
+        </div>
       </div>
     </footer>
   );
