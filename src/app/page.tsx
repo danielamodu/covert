@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useAppKit, useAppKitAccount } from "@reown/appkit/react";
-import { Twitter, Github, MessageCircle } from "lucide-react";
+import { XIcon, GithubIcon as GithubLucideIcon, MessageCircleIcon } from "lucide-react";
 
 function GithubIcon({ size = 14 }: { size?: number }) {
   return (
@@ -70,17 +70,17 @@ function LandingFooter() {
           <ul className="flex list-none mt-6 md:mt-0 space-x-3">
             <li>
               <a href="https://twitter.com/fortyxbt" target="_blank" aria-label="Twitter" className="h-10 w-10 rounded-full border border-white/20 flex items-center justify-center hover:border-white transition-colors">
-                <Twitter className="h-4 w-4 text-white" />
+                <XIcon className="h-4 w-4 text-white" />
               </a>
             </li>
             <li>
               <a href="https://github.com/danielamodu" target="_blank" aria-label="GitHub" className="h-10 w-10 rounded-full border border-white/20 flex items-center justify-center hover:border-white transition-colors">
-                <Github className="h-4 w-4 text-white" />
+                <GithubLucideIcon className="h-4 w-4 text-white" />
               </a>
             </li>
             <li>
               <a href="#" target="_blank" aria-label="Discord" className="h-10 w-10 rounded-full border border-white/20 flex items-center justify-center hover:border-white transition-colors">
-                <MessageCircle className="h-4 w-4 text-white" />
+                <MessageCircleIcon className="h-4 w-4 text-white" />
               </a>
             </li>
           </ul>
