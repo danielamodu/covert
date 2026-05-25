@@ -133,7 +133,13 @@ export default function LandingPage() {
       
       <main className="flex-1 flex flex-col pt-14">
         {/* Full viewport height hero */}
-        <section className="flex-1 flex flex-col justify-center items-center text-center px-6 min-h-[100dvh]">
+        <section className="relative flex-1 flex flex-col items-center justify-center text-center overflow-hidden min-h-[100dvh]">
+          {/* grid background */}
+          <div className="absolute inset-0 hero-grid" />
+          {/* glow overlay */}
+          <div className="absolute inset-0 hero-glow" />
+          {/* content */}
+          <div className="relative z-10 flex flex-col items-center text-center px-6">
           <p
             className="text-[10px] sm:text-xs tracking-[0.25em] uppercase text-neutral-400 mb-8 max-w-2xl leading-relaxed opacity-0 animate-fade-up"
             style={{ animationDelay: '0ms' }}
@@ -171,6 +177,7 @@ export default function LandingPage() {
             >
               View Docs
             </Link>
+          </div>
           </div>
         </section>
 

@@ -284,6 +284,24 @@
   transition-timing-function: var(--ease-out);
 }
 
+/* ── 9. Hero animated background ── */
+@keyframes gridMove {
+  0%   { transform: translateY(0); }
+  100% { transform: translateY(40px); }
+}
+
+.hero-grid {
+  background-image:
+    linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+  animation: gridMove 8s linear infinite;
+}
+
+.hero-glow {
+  background: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(255,255,255,0.08), transparent);
+}
+
 /* ── 8. Reduced motion
    Single blanket override per WCAG 2.1 2.3.3.
    Fade only — no transforms, no choreography.                            ── */
