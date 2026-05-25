@@ -55,7 +55,7 @@ function ServiceCard({ service }: { service: any }) {
   const isAuction = service.type === "auction";
 
   return (
-    <div className="group relative flex flex-col gap-5 border border-black/10 bg-white p-6 transition-[border-color,box-shadow] duration-[150ms] ease-[cubic-bezier(0.23,1,0.32,1)] hover:border-black hover:shadow-[4px_4px_0_0_#000]">
+    <div className="group relative flex flex-col gap-5 border border-black/10 bg-white p-6 [will-change:box-shadow,border-color] transition-[border-color,box-shadow] duration-[150ms] ease-[cubic-bezier(0.23,1,0.32,1)] hover:border-black hover:shadow-[4px_4px_0_0_#000]">
       {/* Top row: badge + price/bid info */}
       <div className="flex items-start justify-between">
         {isAuction ? (
@@ -192,7 +192,7 @@ function FilterBar({
             <button
               key={c}
               onClick={() => setSelectedCategory(c)}
-              className={`px-3 py-1.5 text-[10px] tracking-widest uppercase transition-[background-color,color,border-color] duration-[150ms] ease-[cubic-bezier(0.23,1,0.32,1)] border ${
+              className={`px-3 py-1.5 text-[10px] tracking-widest uppercase transition-[background-color,color,border-color] duration-[150ms] ease-[cubic-bezier(0.23,1,0.32,1)] active:scale-[0.97] border ${
                 selectedCategory === c
                   ? "bg-black text-white border-black"
                   : "bg-transparent text-neutral-600 border-black/20 hover:border-black hover:text-black"

@@ -55,10 +55,7 @@ function Dialog({
       />
       {/* Panel — materialises: opacity + scale */}
       <div
-        className="relative z-10 w-full max-w-md bg-white border border-black/20 p-8 shadow-[8px_8px_0_0_#000]"
-        style={{
-          animation: 'panelIn 0.25s cubic-bezier(0.16,1,0.3,1) both',
-        }}
+        className="animate-panel-in relative z-10 w-full max-w-md bg-white border border-black/20 p-8 shadow-[8px_8px_0_0_#000]"
       >
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-sm font-bold tracking-[0.12em] uppercase text-black">
@@ -173,7 +170,7 @@ function DepositDialog({ address, onClose, onSuccess }: { address: string; onClo
         type="button"
         onClick={handleDeposit}
         disabled={status === "loading" || status === "success" || !amount}
-        className="mt-6 w-full border border-black bg-black py-3 text-[11px] tracking-[0.18em] uppercase text-white hover:bg-white hover:text-black transition-colors disabled:opacity-50 disabled:hover:bg-black disabled:hover:text-white"
+        className="btn-press mt-6 w-full border border-black bg-black py-3 text-[11px] tracking-[0.18em] uppercase text-white hover:bg-white hover:text-black transition-[background-color,color] duration-[150ms] ease-[cubic-bezier(0.23,1,0.32,1)] disabled:opacity-50 disabled:hover:bg-black disabled:hover:text-white"
       >
         {status === "loading" ? "Processing..." : "Confirm Deposit"}
       </button>
@@ -272,7 +269,7 @@ function WithdrawDialog({ address, walletProvider, onClose, onSuccess }: { addre
         type="button"
         onClick={handleWithdraw}
         disabled={status === "loading" || status === "success" || !amount}
-        className="mt-6 w-full border border-black bg-black py-3 text-[11px] tracking-[0.18em] uppercase text-white hover:bg-white hover:text-black transition-colors disabled:opacity-50 disabled:hover:bg-black disabled:hover:text-white"
+        className="btn-press mt-6 w-full border border-black bg-black py-3 text-[11px] tracking-[0.18em] uppercase text-white hover:bg-white hover:text-black transition-[background-color,color] duration-[150ms] ease-[cubic-bezier(0.23,1,0.32,1)] disabled:opacity-50 disabled:hover:bg-black disabled:hover:text-white"
       >
         {status === "loading" ? "Processing..." : "Confirm Withdrawal"}
       </button>
@@ -821,7 +818,7 @@ function ListServiceDialog({ address, onClose }: { address: string; onClose: () 
         type="button"
         onClick={handleSubmit}
         disabled={isDisabled || !name || !description || (serviceType === "fixed" ? !price : !minBid || !auctionEndTime)}
-        className="mt-6 w-full border border-black bg-black py-3 text-[11px] tracking-[0.18em] uppercase text-white hover:bg-white hover:text-black transition-colors disabled:opacity-50 disabled:hover:bg-black disabled:hover:text-white"
+        className="btn-press mt-6 w-full border border-black bg-black py-3 text-[11px] tracking-[0.18em] uppercase text-white hover:bg-white hover:text-black transition-[background-color,color] duration-[150ms] ease-[cubic-bezier(0.23,1,0.32,1)] disabled:opacity-50 disabled:hover:bg-black disabled:hover:text-white"
       >
         {status === "loading" ? "Listing..." : "List Service"}
       </button>
@@ -1068,7 +1065,7 @@ export default function DashboardPage() {
                   aria-label="Refresh balances"
                   className="border border-black/20 p-1.5 hover:border-black transition-colors disabled:opacity-50"
                 >
-                  <RefreshCw size={12} strokeWidth={2} className={refreshing ? "animate-spin" : ""} />
+                  <RefreshCw size={12} strokeWidth={2} className={refreshing ? "spin-fast" : ""} />
                 </button>
               </div>
               <code className="text-sm font-semibold text-black">
@@ -1103,7 +1100,7 @@ export default function DashboardPage() {
               <button
                 type="button"
                 onClick={() => setDialog("list")}
-                className="flex items-center gap-2 border border-black/30 px-4 py-2 text-[11px] tracking-[0.15em] uppercase text-neutral-600 transition-[color,border-color] duration-[150ms] ease-[cubic-bezier(0.23,1,0.32,1)] hover:border-black hover:text-black"
+                className="btn-press flex items-center gap-2 border border-black/30 px-4 py-2 text-[11px] tracking-[0.15em] uppercase text-neutral-600 transition-[color,border-color] duration-[150ms] ease-[cubic-bezier(0.23,1,0.32,1)] hover:border-black hover:text-black"
               >
                 <ListPlus size={12} strokeWidth={2} />
                 List Service
@@ -1114,7 +1111,7 @@ export default function DashboardPage() {
                 type="button"
                 id="disconnect-btn"
                 onClick={() => open()}
-                className="flex items-center gap-2 border border-black/15 px-3 py-2 text-[11px] tracking-[0.15em] uppercase text-neutral-400 transition-[color,border-color] duration-[150ms] ease-[cubic-bezier(0.23,1,0.32,1)] hover:border-black/40 hover:text-neutral-600"
+                className="btn-press flex items-center gap-2 border border-black/15 px-3 py-2 text-[11px] tracking-[0.15em] uppercase text-neutral-400 transition-[color,border-color] duration-[150ms] ease-[cubic-bezier(0.23,1,0.32,1)] hover:border-black/40 hover:text-neutral-600"
               >
                 <LogOut size={12} strokeWidth={2} />
                 Disconnect

@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useAppKit, useAppKitAccount } from "@reown/appkit/react";
 
@@ -105,8 +106,8 @@ function LandingFooter() {
           <div className="mt-6 lg:mt-0 lg:col-[4/11]">
             <ul className="list-none flex flex-wrap -my-1 -mx-3 lg:justify-end">
               {[
-                { href: "#", label: "Privacy" },
-                { href: "#", label: "Terms" },
+                { href: "/privacy", label: "Privacy" },
+                { href: "/terms", label: "Terms" },
               ].map((link, i) => (
                 <li key={i} className="my-1 mx-3 shrink-0">
                   <a href={link.href} className="text-sm text-white/40 underline-offset-4 hover:text-white/60 transition-colors">
@@ -127,6 +128,35 @@ function LandingFooter() {
 }
 
 export default function LandingPage() {
+  // ── Scroll-triggered section reveals ──────────────────────────────────
+  const statsRef      = useRef<HTMLDivElement>(null);
+  const howRef        = useRef<HTMLElement>(null);
+  const roadmapRef    = useRef<HTMLElement>(null);
+  const [statsVis,   setStatsVis]   = useState(false);
+  const [howVis,     setHowVis]     = useState(false);
+  const [roadmapVis, setRoadmapVis] = useState(false);
+
+  useEffect(() => {
+    const targets = [
+      { ref: statsRef,   set: setStatsVis },
+      { ref: howRef,     set: setHowVis },
+      { ref: roadmapRef, set: setRoadmapVis },
+    ];
+    const obs = new IntersectionObserver(
+      (entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            targets.find(t => t.ref.current === entry.target)?.set(true);
+            obs.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.08 }
+    );
+    targets.forEach(({ ref }) => ref.current && obs.observe(ref.current));
+    return () => obs.disconnect();
+  }, []);
+
   return (
     <div className="min-h-screen flex flex-col bg-black text-white selection:bg-white selection:text-black">
       <LandingNavbar />
@@ -149,21 +179,21 @@ export default function LandingPage() {
           
           <h1
             className="max-w-4xl text-5xl sm:text-6xl md:text-8xl font-black leading-tight tracking-tighter mb-8 opacity-0 animate-fade-up"
-            style={{ animationDelay: '80ms' }}
+            style={{ animationDelay: '60ms' }}
           >
             The Dark Market<br />for AI Agents
           </h1>
           
           <p
             className="max-w-[58ch] text-base sm:text-lg leading-relaxed text-neutral-400 mb-12 opacity-0 animate-fade-up"
-            style={{ animationDelay: '160ms' }}
+            style={{ animationDelay: '120ms' }}
           >
             Autonomous agents buy, sell, and transact — without leaking strategy, identity, or price. Powered by MagicBlock&apos;s Private Ephemeral Rollups.
           </p>
           
           <div
             className="flex flex-col sm:flex-row items-center gap-4 w-full justify-center sm:w-auto opacity-0 animate-fade-up"
-            style={{ animationDelay: '240ms' }}
+            style={{ animationDelay: '180ms' }}
           >
             <Link
               href="/marketplace"
@@ -183,8 +213,8 @@ export default function LandingPage() {
 
         {/* Stats Row */}
         <div
-          className="border-t border-white/10 opacity-0 animate-section-reveal"
-          style={{ animationDelay: '100ms' }}
+          ref={statsRef}
+          className={`border-t border-white/10 ${statsVis ? 'animate-section-reveal' : 'opacity-0'}`}
         >
           <div className="mx-auto max-w-6xl w-full grid grid-cols-2 lg:grid-cols-4 divide-x divide-y lg:divide-y-0 divide-white/10">
             {[
@@ -203,9 +233,9 @@ export default function LandingPage() {
 
         {/* How it works */}
         <section
+          ref={howRef}
           id="how-it-works"
-          className="py-32 px-6 border-t border-white/10 opacity-0 animate-section-reveal"
-          style={{ animationDelay: '0ms' }}
+          className={`py-32 px-6 border-t border-white/10 ${howVis ? 'animate-section-reveal' : 'opacity-0'}`}
         >
           <div className="mx-auto max-w-6xl">
             <h2 className="text-xs tracking-[0.2em] uppercase text-neutral-400 mb-16 text-center">
@@ -230,8 +260,9 @@ export default function LandingPage() {
 
         {/* Roadmap */}
         <section
+          ref={roadmapRef}
           id="roadmap"
-          className="py-32 px-6 border-t border-white/10"
+          className={`py-32 px-6 border-t border-white/10 ${roadmapVis ? 'animate-section-reveal' : 'opacity-0'}`}
         >
           <div className="mx-auto max-w-6xl">
             <p className="text-[10px] tracking-[0.25em] uppercase text-neutral-400 mb-4 text-center">

@@ -239,7 +239,8 @@
 }
 
 /* ── 4b. Panel entrance (flex-centered dialogs)
-   Scale only — no translate offset (parent flex handles centering).      ── */
+   Scale only — no translate offset (parent flex handles centering).
+   Class-driven so it can be overridden and avoids inline style hacks.    ── */
 @keyframes panelIn {
   from {
     opacity: 0;
@@ -250,12 +251,16 @@
     transform: scale(1);
   }
 }
+.animate-panel-in {
+  animation: panelIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
 
 /* ── 5. Stagger utilities
    Apply to parent; children inherit --stagger-delay via nth-child offsets.
-   Pattern: add [--i:0] [--i:1] etc. on each child for precise control.  ── */
+   Pattern: add [--i:0] [--i:1] etc. on each child for precise control.
+   60ms interval: responsive without feeling mechanical.                  ── */
 .stagger-children > * {
-  animation-delay: calc(var(--i, 0) * 80ms);
+  animation-delay: calc(var(--i, 0) * 60ms);
 }
 /* Convenience: first 6 children auto-staggered at 80ms each */
 .stagger-children > *:nth-child(1) { --i: 0; }
@@ -296,22 +301,68 @@
     linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
   background-size: 40px 40px;
   animation: gridMove 8s linear infinite;
+  /* GPU-composite the grid layer — skips layout + paint on every frame */
+  will-change: transform;
 }
 
 .hero-glow {
   background: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(255,255,255,0.08), transparent);
+  /* Isolate the glow from content layer repaints */
+  will-change: transform;
+  isolation: isolate;
+}
+
+/* ── 10. Refresh spinner
+   Faster (0.65 s) + non-linear easing makes loading feel more active.
+   Linear 1 s feels sluggish by comparison.                               ── */
+@keyframes spinFast {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+.spin-fast {
+  animation: spinFast 0.65s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
 /* ── 8. Reduced motion
-   Single blanket override per WCAG 2.1 2.3.3.
-   Fade only — no transforms, no choreography.                            ── */
+   WCAG 2.1 2.3.3: reduced motion ≠ zero motion.
+   Zero out position/scale animations; preserve opacity & color
+   transitions that aid comprehension without causing vestibular issues.  ── */
 @media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
+  /* Kill transform-driven entry animations */
+  .animate-fade-up,
+  .animate-section-reveal,
+  .page-enter {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  /* Remove tactile press scale — doesn't help, could disorient */
+  .btn-press:active {
+    transform: none !important;
+  }
+  /* Kill decorative grid motion */
+  .hero-grid {
+    animation: none !important;
+  }
+  /* Kill spinner */
+  .spin-fast,
+  .animate-spin {
+    animation: none !important;
+  }
+  /* Kill dialog/backdrop entrance */
+  .animate-panel-in,
+  .animate-dialog-in,
+  .animate-backdrop-in {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  /* Preserve quick color/opacity micro-interactions — these aid comprehension */
+  .transition-ui {
+    transition-duration: 100ms !important;
+  }
+  /* Disable scroll-snap inertia */
+  * {
     scroll-behavior: auto !important;
   }
   .animate-pulse {
